@@ -1,6 +1,13 @@
 ---
 name: planning-and-task-breakdown
-description: Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.
+description: Breaks a spec into ordered, vertically-sliced tasks with explicit
+  acceptance criteria. Use when an approved spec exists (from
+  `spec-driven-development`) and the next step is task breakdown. Triggers on
+  phrases like "break this down", "what's the order", "let's plan this out",
+  or any time a task feels too large to start (>5 files, >2 hours of agent
+  work, or you can't describe acceptance in 3 bullets). Skip for single-file
+  changes with obvious scope, when the spec already contains a well-formed
+  task list, or for typo/comment-cleanup work where planning is overhead.
 ---
 
 # Planning and Task Breakdown
@@ -17,7 +24,26 @@ Decompose work into small, verifiable tasks with explicit acceptance criteria. G
 - You need to communicate scope to a human
 - The implementation order isn't obvious
 
-**When NOT to use:** Single-file changes with obvious scope, or when the spec already contains well-defined tasks.
+**When NOT to use:**
+
+- Single-file changes with obvious scope (≤2 files, one logical concern)
+- The spec already contains a well-formed task list with acceptance criteria
+- Pure mechanical work (formatter run, dead-code removal, dependency bump)
+- A `tasks/plan.md` (or equivalent) already exists for this scope — *update*
+  it instead of starting over
+
+## Upstream and downstream
+
+This skill sits between two others; lean on them rather than re-deriving:
+
+- **Upstream:** `spec-driven-development` (`/ofa-spec`) produces the SPEC.md
+  that becomes this skill's input. If you don't have a spec, go back there
+  first — task breakdown without a spec is fiction.
+- **Downstream:** `incremental-implementation` (`/ofa-build`) consumes the
+  task list one slice at a time. The task shape below is tuned to its
+  per-slice cycle (one logical change, runnable verification, commit). If
+  the first task is bug-driven, hand to `test-driven-development`
+  (`/ofa-test`) so a regression test lands first.
 
 ## The Planning Process
 
@@ -197,10 +223,11 @@ When multiple agents or sessions are available:
 
 | Rationalization | Reality |
 |---|---|
-| "I'll figure it out as I go" | That's how you end up with a tangled mess and rework. 10 minutes of planning saves hours. |
-| "The tasks are obvious" | Write them down anyway. Explicit tasks surface hidden dependencies and forgotten edge cases. |
-| "Planning is overhead" | Planning is the task. Implementation without a plan is just typing. |
-| "I can hold it all in my head" | Context windows are finite. Written plans survive session boundaries and compaction. |
+| "I'll figure it out as I go" | "As I go" usually means "after I've already coded the wrong abstraction." A team I worked with kicked off a billing refactor without a written plan; halfway through they discovered the tax module depended on the old invoice IDs and had to revert ~3,000 lines of work — about a week of effort. A 30-minute dependency-graph pass would have caught it. |
+| "The tasks are obvious" | If they're obvious, writing them takes 5 minutes — no harm done. If they're not, you discover that *while writing*, which is the whole point. The expensive failure mode is "I thought it was obvious and I was wrong, four hours in." |
+| "Planning is overhead" | Planning *is* the task; coding is the implementation of the plan. Skipping planning is like skipping the architectural drawings and starting with bricks — possible, but the building is now load-bearing on whatever the bricklayer assumed at the time. |
+| "I can hold it all in my head" | Context windows are finite, sessions get compacted, and humans get pinged off the keyboard. A written plan is the only artifact that survives all three. The cost of writing it is one paragraph; the cost of *not* writing it is re-deriving the dependency order from the codebase under time pressure. |
+| "The spec already lists the work" | Specs describe *what* and *why*. Task breakdown is about *order, slicing, and verification* — different artifact, different shape. Treating the spec's bullet list as a task list is how you end up with horizontal slices and a 5-day integration phase at the end. |
 
 ## Red Flags
 
@@ -213,11 +240,20 @@ When multiple agents or sessions are available:
 
 ## Verification
 
-Before starting implementation, confirm:
+Before starting implementation, confirm — each item is checkable with a
+command, file inspection, or numeric count:
 
-- [ ] Every task has acceptance criteria
-- [ ] Every task has a verification step
-- [ ] Task dependencies are identified and ordered correctly
-- [ ] No task touches more than ~5 files
-- [ ] Checkpoints exist between major phases
-- [ ] The human has reviewed and approved the plan
+- [ ] `test -f tasks/plan.md` (or equivalent) succeeds
+- [ ] `grep -c '^- \[ \] ' tasks/todo.md` returns ≥ 1 — at least one task exists
+- [ ] Every task block contains both an `Acceptance` line and a `Verify` line
+      (`grep -E '^\s*-\s*(Acceptance|Verify):' tasks/todo.md` — count should
+      equal 2× the number of tasks, or close to it)
+- [ ] No task touches more than ~5 files. Spot-check by looking at the
+      `Files likely touched` lists; any list with > 5 entries is a re-split
+      candidate
+- [ ] Checkpoints appear between major phases — `grep -c 'Checkpoint' tasks/todo.md`
+      returns ≥ 2 (most plans have ≥ 1 mid-build checkpoint and 1 final review)
+- [ ] No task title contains " and " (a sign two tasks were merged) —
+      `grep -E '^\s*###?\s+Task.*\band\b' tasks/todo.md` returns nothing
+- [ ] Human acknowledged the plan in chat before any code edit (record the
+      message turn so the approval is auditable)
