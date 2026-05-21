@@ -298,3 +298,16 @@ After fixing a bug:
 - [ ] All existing tests pass
 - [ ] Build succeeds
 - [ ] The original bug scenario is verified end-to-end
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Bug is reproduced — write a failing regression test before fixing | `/ofa-test` (`test-driven-development`) |
+| Fix has landed — continue the in-progress task list | `/ofa-build` (`incremental-implementation`) |
+| Bug stems from misreading authoritative sources (API docs, specs, RFCs) | `source-driven-development` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

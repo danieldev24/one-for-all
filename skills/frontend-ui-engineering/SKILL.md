@@ -326,3 +326,16 @@ After building UI:
 - [ ] Loading, error, and empty states all handled
 - [ ] Follows the project's design system (spacing, colors, typography)
 - [ ] No accessibility warnings in dev tools or axe-core
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| UI is built — verify it in a real browser | `browser-testing-with-devtools` |
+| UI is verified and ready for review | `/ofa-review` (`code-review-and-quality`) |
+| Core Web Vitals or render perf is the concern | `performance-optimization` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

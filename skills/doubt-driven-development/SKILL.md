@@ -213,3 +213,16 @@ After applying doubt-driven development:
 - [ ] In interactive mode, cross-model was **explicitly offered** to the user (regardless of artifact stakes) and the response was acknowledged in the output
 - [ ] In non-interactive mode, cross-model was skipped and the skip was announced
 - [ ] Any external CLI invocation was preceded by a PATH check, a working-binary test, syntax confirmation with the user, and explicit authorization to run
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Doubt is named and resolved — return to the originating skill | the skill that triggered the doubt |
+| Doubt is a stakeholder question (intent, scope, acceptance) | `interview-me` |
+| Doubt can be resolved by reading authoritative sources | `source-driven-development` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

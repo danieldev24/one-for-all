@@ -178,3 +178,19 @@ Not every task needs every skill. A bug fix might only need: `debugging-and-erro
 | Ship | ci-cd-and-automation | Automated quality gates on every change |
 | Ship | documentation-and-adrs | Document the why, not just the what |
 | Ship | shipping-and-launch | Pre-launch checklist, monitoring, rollback plan |
+
+## Next
+
+`using-one-for-all` is a router, not a step — it dispatches to whichever
+phase fits the user's current task. Pick the row that matches the
+situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Starting a new feature from scratch | `/ofa-spec` (`spec-driven-development`) |
+| Spec exists, ready to break into tasks | `/ofa-plan` (`planning-and-task-breakdown`) |
+| Plan exists, ready to build | `/ofa-build` (`incremental-implementation`) |
+| Code is ready for review | `/ofa-review` (`code-review-and-quality`) |
+| Code is reviewed, ready to ship | `/ofa-ship` (`shipping-and-launch`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

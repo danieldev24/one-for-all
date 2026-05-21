@@ -332,3 +332,16 @@ inspection, or observable agent behavior:
       context references the *specific* spec section, not the whole
       file (`grep -A 1 'RELEVANT FILES' <agent-brief>` shows section-
       level pointers like `SPEC.md ## Authentication`, not just `SPEC.md`)
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Context is loaded — resume implementation | `/ofa-build` (`incremental-implementation`) |
+| Missing context is in authoritative sources (RFCs, specs, vendor docs) | `source-driven-development` |
+| Context is loaded — return to whichever skill needed it (planning, review, debugging) | the originating skill |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

@@ -192,3 +192,16 @@ After implementing with source-driven development:
 - [ ] No deprecated APIs are used (checked against migration guides)
 - [ ] Conflicts between docs and existing code were surfaced to the user
 - [ ] Anything that could not be verified is explicitly flagged as unverified
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Sources are read and decisions grounded — return to implementation | `/ofa-build` (`incremental-implementation`) |
+| Sources answered a review question — return to review | `/ofa-review` (`code-review-and-quality`) |
+| More general project context is also missing | `context-engineering` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

@@ -257,3 +257,16 @@ command, file inspection, or numeric count:
       `grep -E '^\s*###?\s+Task.*\band\b' tasks/todo.md` returns nothing
 - [ ] Human acknowledged the plan in chat before any code edit (record the
       message turn so the approval is auditable)
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Plan is approved — start executing the task list | `/ofa-build` (`incremental-implementation`) |
+| Planning surfaced gaps in the spec | `/ofa-spec` (`spec-driven-development`) |
+| First task is bug-driven — land a regression test first | `/ofa-test` (`test-driven-development`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

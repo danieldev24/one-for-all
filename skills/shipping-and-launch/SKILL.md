@@ -307,3 +307,16 @@ After deploying:
 - [ ] Critical user flow works
 - [ ] Logs are flowing
 - [ ] Rollback tested or verified ready
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Launch surfaced an incident or unexpected behavior | `debugging-and-error-recovery` |
+| Need a post-mortem, runbook, or release notes | `documentation-and-adrs` |
+| New change request — start the next lifecycle | `/ofa-spec` (`spec-driven-development`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

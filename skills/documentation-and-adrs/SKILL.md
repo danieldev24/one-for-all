@@ -276,3 +276,15 @@ After documenting:
 - [ ] Known gotchas are documented inline where they matter
 - [ ] No commented-out code remains
 - [ ] Rules files (CLAUDE.md etc.) are current and accurate
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Docs and ADRs are written — ship them with the change | `/ofa-ship` (`shipping-and-launch`) |
+| Docs need a review pass before merge | `/ofa-review` (`code-review-and-quality`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

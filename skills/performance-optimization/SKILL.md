@@ -348,3 +348,16 @@ After any performance-related change:
 - [ ] No N+1 queries in new data fetching code
 - [ ] Performance budget passes in CI (if configured)
 - [ ] Existing tests still pass (optimization didn't break behavior)
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Optimization is done — re-review the change | `/ofa-review` (`code-review-and-quality`) |
+| Frontend perf needs in-browser measurement | `browser-testing-with-devtools` |
+| Add a perf-regression test to lock in the gain | `/ofa-test` (`test-driven-development`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

@@ -257,3 +257,16 @@ command, file check, or observable artifact:
 - [ ] If a Jira/Confluence/Figma URL was supplied: the spec contains a link back to it AND an `Extraction Summary` block that reviewers can audit
 - [ ] The human has explicitly responded "approved" / "go ahead" / equivalent in chat after seeing the spec — record the message turn so it's auditable
 
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Spec is approved — break it into ordered tasks | `/ofa-plan` (`planning-and-task-breakdown`) |
+| Spec exposed unresolved requirements | `interview-me` |
+| Change is small and obvious — skip planning | `/ofa-build` (`incremental-implementation`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`
+

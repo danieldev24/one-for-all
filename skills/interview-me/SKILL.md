@@ -219,3 +219,15 @@ After applying interview-me:
 - [ ] The user confirmed the restate with an explicit yes (not "whatever you think," not "sounds good," not silence)
 - [ ] At the stop point, the agent could predict reactions to the next three questions it would ask
 - [ ] Any handoff to a downstream skill (`idea-refine`, `spec-driven-development`) was framed in terms of the confirmed intent, not the original underspecified ask
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Requirements are clear — write the spec | `/ofa-spec` (`spec-driven-development`) |
+| The concept itself (not just requirements) needs exploration | `idea-refine` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

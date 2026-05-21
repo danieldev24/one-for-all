@@ -298,3 +298,15 @@ For every commit:
 - [ ] No secrets in the diff
 - [ ] No formatting-only changes mixed with behavior changes
 - [ ] `.gitignore` covers standard exclusions
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Branches and commits are clean — let the pipeline take over | `ci-cd-and-automation` |
+| The change needs a changelog entry or ADR | `documentation-and-adrs` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

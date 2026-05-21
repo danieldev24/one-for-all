@@ -310,3 +310,17 @@ inspection, or PR-comment audit:
       readability, architecture, security, performance — each as either a
       checkbox in the review note or an explicit "no findings on this
       axis" line
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Review passed — change is ready to ship | `/ofa-ship` (`shipping-and-launch`) |
+| Review surfaced complexity or duplication issues | `/ofa-code-simplify` (`code-simplification`) |
+| Review surfaced security concerns | `security-and-hardening` |
+| Review surfaced performance concerns | `performance-optimization` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

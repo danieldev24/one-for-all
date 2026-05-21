@@ -404,3 +404,16 @@ command, file inspection, or runnable artifact:
 - [ ] If coverage is tracked: line coverage didn't drop. Compare
       `npm test -- --coverage` output against the baseline recorded in
       `tasks/` or CI
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Failing test is in place — implement against it | `/ofa-build` (`incremental-implementation`) |
+| Test revealed an unexpected failure mode | `debugging-and-error-recovery` |
+| Behavior under test is in the browser | `browser-testing-with-devtools` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

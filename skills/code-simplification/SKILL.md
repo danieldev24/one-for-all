@@ -329,3 +329,15 @@ After completing a simplification pass:
 - [ ] No error handling was removed or weakened
 - [ ] No dead code was left behind (unused imports, unreachable branches)
 - [ ] A teammate or review agent would approve the change as a net improvement
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Simplification is done — re-review against the original change | `/ofa-review` (`code-review-and-quality`) |
+| Need to confirm the simplification didn't change behavior | `/ofa-test` (`test-driven-development`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

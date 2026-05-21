@@ -372,3 +372,16 @@ command, file inspection, or runtime probe:
 - [ ] Rate limiting active on auth endpoints: hit `/login` or
       equivalent ≥ N+1 times in the limit window and confirm the
       (N+1)th returns 429
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Security findings addressed — feed them into the review | `/ofa-review` (`code-review-and-quality`) |
+| Findings are at API boundaries (input validation, authz contracts) | `api-and-interface-design` |
+| Findings touch secrets handling or commit hygiene | `git-workflow-and-versioning` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

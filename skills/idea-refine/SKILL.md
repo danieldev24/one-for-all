@@ -176,3 +176,15 @@ After completing an ideation session:
 - [ ] A "Not Doing" list makes trade-offs explicit
 - [ ] The output is a concrete artifact (markdown one-pager), not just conversation
 - [ ] The user confirmed the final direction before any implementation work
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Concept is concrete — write the spec | `/ofa-spec` (`spec-driven-development`) |
+| User preferences or constraints are still unclear | `interview-me` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

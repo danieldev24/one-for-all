@@ -321,3 +321,16 @@ inspection, or static-analysis tool:
       no matches for path strings); query/response fields are camelCase
 - [ ] Schema and route file are committed together — no "API change
       lands now, types follow next sprint"
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Contract is defined and ready to implement against | `/ofa-build` (`incremental-implementation`) |
+| Contract handles user input or auth — needs validation/authz patterns | `security-and-hardening` |
+| Contract changes break an existing public surface | `deprecation-and-migration` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

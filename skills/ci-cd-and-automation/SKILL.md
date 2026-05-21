@@ -388,3 +388,16 @@ After setting up or modifying CI:
 - [ ] Secrets are stored in the secrets manager, not in code
 - [ ] Deployment has a rollback mechanism
 - [ ] Pipeline runs in under 10 minutes for the test suite
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Pipeline is green and the change is ready to ship | `/ofa-ship` (`shipping-and-launch`) |
+| The release contains breaking changes | `deprecation-and-migration` |
+| Pipeline configuration itself needs review | `/ofa-review` (`code-review-and-quality`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

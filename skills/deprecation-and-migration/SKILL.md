@@ -204,3 +204,16 @@ After completing a deprecation:
 - [ ] Old code, tests, documentation, and configuration are fully removed
 - [ ] No references to the deprecated system remain in the codebase
 - [ ] Deprecation notices are removed (they served their purpose)
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Migration plan is ready — record the why in an ADR | `documentation-and-adrs` |
+| The replacement contract still needs to be designed | `api-and-interface-design` |
+| Migration is implemented and ready to release | `/ofa-ship` (`shipping-and-launch`) |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`

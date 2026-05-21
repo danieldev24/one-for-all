@@ -283,3 +283,16 @@ command, file check, or numeric output:
       against the SPEC.md success criteria
 - [ ] No commit message in the slice range contains generic strings like
       "wip", "fix stuff", or "more changes" (`git log --format=%s` to scan)
+
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Slice is implemented — review before merge | `/ofa-review` (`code-review-and-quality`) |
+| Slice needs more test coverage | `/ofa-test` (`test-driven-development`) |
+| Slice is broken or behaving unexpectedly | `debugging-and-error-recovery` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`
