@@ -69,6 +69,12 @@ Code examples, templates, configuration.
 After completing the skill's process, confirm:
 - [ ] Checklist of exit criteria
 - [ ] Evidence requirements
+
+## Next
+| If the situation is... | Suggest invoking |
+|---|---|
+| Happy-path next step | `next-skill` or /ofa-command |
+| Branch or step-back   | `alternate-skill` |
 ```
 
 ## Section Purposes
@@ -95,6 +101,111 @@ Observable signs that the skill is being violated. Useful during code review and
 
 ### Verification
 The exit criteria. A checklist the agent uses to confirm the skill's process is complete. Every checkbox should be verifiable with evidence (test output, build result, screenshot, etc.).
+
+### Next
+The lifecycle handoff. Tells the agent which skill or command to recommend after this one exits. Pulled from [`docs/lifecycle-map.md`](lifecycle-map.md), which is the source of truth for the workflow graph. Every skill must end with the standard footer line:
+
+> End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`
+
+The `## Next` section is structurally enforced by `scripts/check-lifecycle-chain.js`: every name in the right-hand column must resolve to a real skill (a directory under `skills/`) or slash command (a file under `.claude/commands/`).
+
+## v1.1 Quality Bar
+
+These are the rules `scripts/validate-skills.js --strict` enforces. Run that command before committing.
+
+### Trigger sharpness
+
+The frontmatter `description` is the only thing the agent sees when *deciding* whether to load a skill. Make it count.
+
+**Good** — names skip conditions and trigger phrases:
+```yaml
+description: Write a structured PRD before code when the change touches
+  multiple files, takes >30 minutes, or has ambiguous requirements. Triggers
+  on phrases like "let's build", "I want to add", "design a feature for".
+  Skip for typo fixes, single-line bug fixes, or unambiguous mechanical
+  refactors.
+```
+
+**Bad** — vague, no skip conditions:
+```yaml
+description: Helps with planning new features.
+```
+
+Rules: ≥ 100 chars, contains the word "when" or "trigger", ≤ 1024 chars.
+
+### Verification rigor
+
+Verification items must be **testable**, not aspirational. A future reader should be able to verify each item with a command, file check, or observable behavior.
+
+**Good:**
+```markdown
+- [ ] `node scripts/validate-skills.js --strict` exits 0
+- [ ] SPEC.md exists at repo root with all six sections
+- [ ] Each item in Success Criteria has a measurable threshold
+```
+
+**Bad:**
+```markdown
+- [ ] The work is complete
+- [ ] Tests are good
+- [ ] Code is clean
+```
+
+Rule: ≥ 3 checklist items per skill.
+
+### Anti-rationalization rebuttals
+
+Every row in `## Common Rationalizations` must rebut with a **failure story** or **quantified cost**, not a restated principle.
+
+**Good:**
+```
+| "I'll write the spec after I code it" | That's documentation, not specification.
+  The spec's job is to surface misunderstandings *before* they become rework.
+  A team I worked with shipped 3 features without specs; 2 needed full
+  rewrites after launch when stakeholders saw what "done" looked like. |
+```
+
+**Bad:**
+```
+| "I'll write the spec after I code it" | You should write the spec first. |
+```
+
+Rule: ≥ 3 data rows per table (header and separator excluded).
+
+### Dedup via cross-references
+
+If a body of content (validation patterns, secrets handling, review framing) lives in two skills, extract it to `references/<topic>.md` and have both skills link to the canonical reference instead of duplicating it.
+
+The dedup scanner (`scripts/scan-duplication.js`) flags any block of ≥ 5 verbatim consecutive eligible lines that appears in two or more SKILL.md files. The `## Next`-time exit gate is **zero** blocks of that size.
+
+Rule: each skill keeps at least one full worked example so it stands alone — references hold reusable patterns and checklists, not the entire skill content.
+
+### Lifecycle handoff (`## Next` section)
+
+Every skill ends with a `## Next` section telling the agent what to recommend when this skill exits. Format is consistent across all skills:
+
+```markdown
+## Next
+
+After this skill exits, advise the user on what to do next. Pick the row
+that matches the situation:
+
+| If the situation is... | Suggest invoking |
+|---|---|
+| Spec is approved and ready to break into tasks | `/ofa-plan` (`planning-and-task-breakdown`) |
+| Spec needs more clarification first | `interview-me` skill |
+| Small change with obvious tasks | Skip planning, go straight to `/ofa-build` |
+
+End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`
+```
+
+Rules:
+- Section heading must be exactly `## Next`
+- Table must have ≥ 2 data rows
+- Each right-hand cell must reference either a skill name (matching a directory in `skills/`) or a slash command (matching a file in `.claude/commands/`)
+- The standard footer line is mandatory — agents read it as their handoff cue
+
+Pull rows from [`docs/lifecycle-map.md`](lifecycle-map.md) — that file is the canonical workflow graph. Edit the map first when adding edges, then propagate to the skill.
 
 ## Supporting Files
 
@@ -141,6 +252,8 @@ Required:
 - A `skills/<skill-name>/SKILL.md` file
 - Valid YAML frontmatter with `name` and `description`
 - A description that includes both what the skill does and when to use it
+- All six standard sections: `## Overview`, `## When to Use`, `## Common Rationalizations`, `## Red Flags`, `## Verification`, `## Next`
+- Passes `node scripts/validate-skills.js --strict` (see "v1.1 Quality Bar" above)
 
 Recommended:
 
