@@ -1,6 +1,6 @@
 ---
 name: spec-driven-development
-description: Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea.
+description: Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Also use when the user references a ticket (Jira ID like ABC-123, Jira/Confluence URL) or a Figma design URL — Phase 0 will fetch those as the requirement source instead of asking the user to retype them.
 ---
 
 # Spec-Driven Development
@@ -16,24 +16,68 @@ Write a structured specification before writing any code. The spec is the shared
 - The change touches multiple files or modules
 - You're about to make an architectural decision
 - The task would take more than 30 minutes to implement
+- The user pasted a ticket ID, Jira/Confluence URL, or Figma URL as the brief — run Phase 0 to ingest it
 
 **When NOT to use:** Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
 
 ## The Gated Workflow
 
-Spec-driven development has four phases. Do not advance to the next phase until the current one is validated.
+Spec-driven development has five phases. Phase 0 is skipped only when no external source is referenced. Do not advance to the next phase until the current one is validated.
 
 ```
-SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
-   │          │        │          │
-   ▼          ▼        ▼          ▼
- Human      Human    Human      Human
- reviews    reviews  reviews    reviews
+INGEST ──→ SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
+   │          │          │        │          │
+   ▼          ▼          ▼        ▼          ▼
+ Auto       Human      Human    Human      Human
+ (verify)   reviews    reviews  reviews    reviews
 ```
+
+### Phase 0: Ingest External Sources
+
+If the user's brief contains any of the following, fetch them **before** asking clarifying questions. The ticket is the requirement source — your job is to read it, not to make the user retype it.
+
+**Detection patterns:**
+
+| Source | Trigger | Fetch with |
+|---|---|---|
+| Jira ticket | `ABC-123`-style key, or `*.atlassian.net/browse/ABC-123` | `mcp__plugin_atlassian_atlassian__getJiraIssue` |
+| Confluence page | `*.atlassian.net/wiki/spaces/.../pages/...` | `mcp__plugin_atlassian_atlassian__getConfluencePage` |
+| Figma design | `figma.com/design/<fileKey>/...?node-id=<nodeId>` | `mcp__plugin_figma_figma__get_design_context` (also `get_metadata`, `get_screenshot` as needed) |
+
+For Atlassian sources, call `getAccessibleAtlassianResources` first if you don't already have a `cloudId`. For Figma URLs, parse `fileKey` and `nodeId` per the Figma MCP server instructions (replace `-` with `:` in the node id).
+
+**After fetching, produce an Extraction Summary:**
+
+```
+EXTRACTED FROM [ticket/url]:
+- Objective:        [from ticket title + description]
+- Acceptance:       [from ticket "AC" / "Definition of Done" sections, or null]
+- Constraints:      [explicit deadlines, perf targets, compliance asks]
+- Stakeholders:     [reporter, assignee, watchers if relevant]
+- Linked context:   [other tickets, Confluence pages, designs the ticket points to]
+- Design surface:   [Figma frames + the visible UI states they cover, if applicable]
+```
+
+Then map what's present onto the six spec areas and list the gaps:
+
+```
+COVERAGE FROM SOURCE:
+✓ Objective         (from ticket description)
+✓ Success Criteria  (from "Acceptance Criteria" section)
+✗ Tech Stack        — not in ticket
+✗ Commands          — not in ticket
+✗ Code Style        — defer to repo conventions
+✗ Testing Strategy  — not in ticket
+✗ Boundaries        — not in ticket
+```
+
+**Then ask one batched question covering only the gaps**, not the whole spec. Do not re-ask for anything the ticket already answered. If the ticket answered something *ambiguously*, surface the ambiguity ("the ticket says 'fast' — is the target LCP < 2.5s?") rather than discarding the ticket's content.
+
+If a fetch fails (permissions, dead link, unauthenticated MCP), say so explicitly and fall back to Phase 1's "ask the human" path. Never fabricate ticket content.
 
 ### Phase 1: Specify
 
-Start with a high-level vision. Ask the human clarifying questions until requirements are concrete.
+Start with a high-level vision. If Phase 0 ran, your starting point is the Extraction Summary plus the user's answers to the gap question — do not throw that away and start from scratch. Ask the human clarifying questions only for what is still ambiguous after Phase 0 (or for everything, if no external source was provided).
 
 **Surface assumptions immediately.** Before writing any spec content, list what you're assuming:
 
@@ -180,6 +224,8 @@ The spec is a living document, not a one-time artifact:
 | "The spec will slow us down" | A 15-minute spec prevents hours of rework. Waterfall in 15 minutes beats debugging in 15 hours. |
 | "Requirements will change anyway" | That's why the spec is a living document. An outdated spec is still better than no spec. |
 | "The user knows what they want" | Even clear requests have implicit assumptions. The spec surfaces those assumptions. |
+| "The ticket says everything I need" | Tickets describe the *what* and rarely the *how*, the *boundaries*, or the *test strategy*. Phase 0 ingests the ticket; Phase 1 still has to fill the gaps. |
+| "I'll just retype the ticket into the spec" | If a Jira/Confluence/Figma URL was given, fetch it. Retyping introduces drift between the spec and the source of truth. |
 
 ## Red Flags
 
@@ -188,6 +234,8 @@ The spec is a living document, not a one-time artifact:
 - Implementing features not mentioned in any spec or task list
 - Making architectural decisions without documenting them
 - Skipping the spec because "it's obvious what to build"
+- A ticket / Figma URL was provided but you asked the user to retype its contents instead of fetching it
+- Phase 0 fetch failed silently — you proceeded as if you had the source content
 
 ## Verification
 
@@ -198,3 +246,5 @@ Before proceeding to implementation, confirm:
 - [ ] Success criteria are specific and testable
 - [ ] Boundaries (Always/Ask First/Never) are defined
 - [ ] The spec is saved to a file in the repository
+- [ ] If a ticket / Figma URL was provided, the spec links back to it and the Extraction Summary is preserved (in the spec or its Open Questions section) so reviewers can audit what came from the source vs. what was added later
+
