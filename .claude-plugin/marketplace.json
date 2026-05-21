@@ -1,0 +1,19 @@
+{
+  "name": "one-for-all",
+  "owner": {
+    "name": "Hoang Son"
+  },
+  "metadata": {
+    "description": "Production-grade engineering skills for AI coding agents — covering the full software development lifecycle from spec to ship."
+  },
+  "plugins": [
+    {
+      "name": "one-for-all",
+      "source": {
+        "source": "github",
+        "repo": "danieldev24/one-for-all"
+      },
+      "description": "Production-grade engineering skills covering every phase of software development: spec, plan, build, verify, review, and ship."
+    }
+  ]
+}
