@@ -12,13 +12,13 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 | What you're doing | Command | Key principle |
 |-------------------|---------|---------------|
-| Define what to build | `/spec` | Spec before code |
-| Plan how to build it | `/plan` | Small, atomic tasks |
-| Build incrementally | `/build` | One slice at a time |
-| Prove it works | `/test` | Tests are proof |
-| Review before merge | `/review` | Improve code health |
-| Simplify the code | `/code-simplify` | Clarity over cleverness |
-| Ship to production | `/ship` | Faster is safer |
+| Define what to build | `/ofa-spec` | Spec before code |
+| Plan how to build it | `/ofa-plan` | Small, atomic tasks |
+| Build incrementally | `/ofa-build` | One slice at a time |
+| Prove it works | `/ofa-test` | Tests are proof |
+| Review before merge | `/ofa-review` | Improve code health |
+| Simplify the code | `/ofa-code-simplify` | Clarity over cleverness |
+| Ship to production | `/ofa-ship` | Faster is safer |
 
 Skills also activate automatically based on what you're doing — designing an API triggers `api-and-interface-design`, building UI triggers `frontend-ui-engineering`, and so on.
 
@@ -225,6 +225,12 @@ Skills should be **specific** (actionable steps, not vague advice), **verifiable
 See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the format specification and [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest: **v1.1.0** —
+quality pass across the 23 skills (tighter triggers, executable
+verification, costed rationalizations, lifecycle handoff via `## Next`).
 
 ## License
 

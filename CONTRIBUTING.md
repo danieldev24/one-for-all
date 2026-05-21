@@ -33,8 +33,17 @@ New skills should generally follow the standard anatomy:
 - **Common Rationalizations** — Excuses agents use to skip steps, with rebuttals
 - **Red Flags** — Warning signs that the skill is being applied incorrectly
 - **Verification** — How to confirm the skill was applied correctly
+- **Next** — Lifecycle handoff table sourced from [`docs/lifecycle-map.md`](docs/lifecycle-map.md)
 
 The frontmatter fields above are required. The section anatomy is a recommended pattern: equivalent headings such as `How It Works`, `Workflow`, or `Core Process` are fine when they preserve the same intent and keep the skill easy to follow.
+
+Before opening a PR, run the three structural gates locally:
+
+```bash
+node scripts/validate-skills.js --strict      # frontmatter + sections + ## Next
+node scripts/scan-duplication.js              # zero blocks ≥ 5 eligible lines
+node scripts/check-lifecycle-chain.js         # every ## Next reference resolves
+```
 
 ### What Not to Do
 

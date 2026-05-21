@@ -107,12 +107,13 @@ The `.claude/commands/` directory contains slash commands for Claude Code:
 
 | Command | Skill Invoked |
 |---------|---------------|
-| `/spec` | spec-driven-development |
-| `/plan` | planning-and-task-breakdown |
-| `/build` | incremental-implementation + test-driven-development |
-| `/test` | test-driven-development |
-| `/review` | code-review-and-quality |
-| `/ship` | shipping-and-launch |
+| `/ofa-spec` | spec-driven-development |
+| `/ofa-plan` | planning-and-task-breakdown |
+| `/ofa-build` | incremental-implementation + test-driven-development |
+| `/ofa-test` | test-driven-development |
+| `/ofa-review` | code-review-and-quality |
+| `/ofa-code-simplify` | code-simplification |
+| `/ofa-ship` | shipping-and-launch |
 
 ## Using References
 
@@ -129,7 +130,7 @@ Load a reference when you need detailed patterns beyond what the skill covers.
 
 ## Spec and task artifacts
 
-The `/spec` and `/plan` commands create working artifacts (`SPEC.md`, `tasks/plan.md`, `tasks/todo.md`). Treat them as **living documents** while the work is in progress:
+The `/ofa-spec` and `/ofa-plan` commands create working artifacts (`SPEC.md`, `tasks/plan.md`, `tasks/todo.md`). Treat them as **living documents** while the work is in progress:
 
 - Keep them in version control during development so the human and the agent have a shared source of truth.
 - Update them when scope or decisions change.
