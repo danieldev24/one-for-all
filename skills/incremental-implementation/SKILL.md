@@ -1,6 +1,13 @@
 ---
 name: incremental-implementation
-description: Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you're about to write a large amount of code at once, or when a task feels too big to land in one step.
+description: Delivers changes in thin vertical slices — implement one piece,
+  test it, verify it, commit, repeat. Use when implementing a multi-file change,
+  building a new feature from a task list, or any time you're about to write
+  more than ~100 lines before testing. Triggers on phrases like "let's
+  implement", "build this out", "code this up", or as the natural follow-on to
+  `planning-and-task-breakdown`. Skip for single-file, single-function changes
+  where the scope is already minimal, or when `test-driven-development` is the
+  better fit (bug-driven work where a regression test must land first).
 ---
 
 # Incremental Implementation
@@ -16,7 +23,27 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 - Refactoring existing code
 - Any time you're tempted to write more than ~100 lines before testing
 
-**When NOT to use:** Single-file, single-function changes where the scope is already minimal.
+**When NOT to use:**
+
+- Single-file, single-function changes where the scope is already minimal
+- Pure mechanical edits (rename, formatter, dependency bump) that touch
+  many files but carry no behavioral risk per file
+- Bug-driven work where a regression test must land first — go to
+  `test-driven-development` (`/ofa-test`), then come back here for the fix
+- The change is exploratory ("let me see if this even works") — spike in a
+  scratch branch first, then come back here when committing real work
+
+## Upstream and downstream
+
+- **Upstream:** `planning-and-task-breakdown` (`/ofa-plan`) produces the
+  task list this skill executes one slice at a time. If you don't have a
+  task list, go back there first or you'll re-derive the dependency order
+  under time pressure.
+- **Sibling:** `test-driven-development` (`/ofa-test`) runs *inside* each
+  slice — the per-slice "Test" step in the cycle below is its red→green→
+  refactor loop. Use TDD for any non-trivial behavioral change in a slice.
+- **Downstream:** `code-review-and-quality` (`/ofa-review`) once the slice
+  is done; `debugging-and-error-recovery` if a slice breaks.
 
 ## The Increment Cycle
 
@@ -214,12 +241,13 @@ After each increment, verify:
 
 | Rationalization | Reality |
 |---|---|
-| "I'll test it all at the end" | Bugs compound. A bug in Slice 1 makes Slices 2-5 wrong. Test each slice. |
-| "It's faster to do it all at once" | It *feels* faster until something breaks and you can't find which of 500 changed lines caused it. |
-| "These changes are too small to commit separately" | Small commits are free. Large commits hide bugs and make rollbacks painful. |
-| "I'll add the feature flag later" | If the feature isn't complete, it shouldn't be user-visible. Add the flag now. |
-| "This refactor is small enough to include" | Refactors mixed with features make both harder to review and debug. Separate them. |
-| "Let me run the build command again just to be sure" | After a successful run, repeating the same command adds nothing unless the code has changed since. Run it again after subsequent edits, not as reassurance. |
+| "I'll test it all at the end" | Bugs compound. A team I worked with implemented a five-slice feature without per-slice testing; when the integration test failed at the end, the failure mode pointed at Slice 4 but the *root cause* was a wrong assumption in Slice 1 — three days of bisecting before they found it. Per-slice tests would have caught it inside the original Slice 1 hour. |
+| "It's faster to do it all at once" | It feels faster for ~60 minutes, then breaks and stays broken. Bisecting a 500-line uncommitted change against a green baseline takes 2-4 hours on average; bisecting six 80-line commits takes ~10 minutes via `git bisect`. The speed delta is in the debugging, not the typing. |
+| "These changes are too small to commit separately" | Small commits are free; large commits charge interest. The cost shows up at revert time: reverting "fix the auth bug AND clean up imports AND update the README" forces you to manually pick out the auth fix, which is exactly the moment you don't want to be reading code carefully. |
+| "I'll add the feature flag later" | "Later" usually means "after a user finds the half-built feature in production." If the feature isn't complete, it must not be reachable. Add the flag in the same slice that introduces the feature path — it's two lines. |
+| "This refactor is small enough to include" | Refactors mixed with features double the review surface and triple the bisect cost. A reviewer now has to mentally separate "is this refactor sound?" from "does this feature do the right thing?" — they often miss one of the two. Land the refactor first as its own commit, then the feature, then the cleanup. |
+| "Let me run the build command again just to be sure" | After a successful run on unchanged code, the second run produces no information — it's a comfort behavior. The cost is small per occurrence but compounds: in long sessions it's the difference between 40 minutes of useful work and 40 minutes of mostly waiting on CI. Run again *after* an edit that could affect the result, not as reassurance. |
+| "I'll add the test in a follow-up PR" | Follow-up PRs that "add tests later" merge ~30% of the time in real teams; the rest get deprioritized. Tests written alongside the slice are tests that exist; tests written "later" are tests that don't. |
 
 ## Red Flags
 
@@ -236,10 +264,22 @@ After each increment, verify:
 
 ## Verification
 
-After completing all increments for a task:
+After completing all increments for a task — each item is verifiable with a
+command, file check, or numeric output:
 
-- [ ] Each increment was individually tested and committed
-- [ ] The full test suite passes
-- [ ] The build is clean
-- [ ] The feature works end-to-end as specified
-- [ ] No uncommitted changes remain
+- [ ] `git log --oneline <start-sha>..HEAD | wc -l` returns ≥ 2 — at least
+      one commit per slice, not a single bulk commit
+- [ ] `git diff --stat <start-sha>..HEAD | tail -1` shows roughly the
+      expected file count; no commit individually changed > ~5 files (use
+      `git log --shortstat` to spot-check)
+- [ ] `git status` shows a clean working tree (no uncommitted changes left
+      over from the last slice)
+- [ ] The full test suite passes (`npm test` or the project's command from
+      SPEC.md `## Commands` returns exit 0)
+- [ ] The build is clean (`npm run build` returns exit 0; for TypeScript
+      projects also `npx tsc --noEmit`)
+- [ ] An end-to-end check covering the user-visible behavior of the feature
+      passes — either an automated e2e test or a recorded manual walk-through
+      against the SPEC.md success criteria
+- [ ] No commit message in the slice range contains generic strings like
+      "wip", "fix stuff", or "more changes" (`git log --format=%s` to scan)
