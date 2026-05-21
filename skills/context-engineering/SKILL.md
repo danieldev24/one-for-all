@@ -1,6 +1,16 @@
 ---
 name: context-engineering
-description: Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.
+description: Curates what an agent sees, when, and in what shape — rules
+  files, spec excerpts, source files, error output, and conversation
+  hygiene. Use when agent output starts drifting from project conventions
+  (wrong patterns, hallucinated APIs, ignored boundaries), when setting up
+  a *new* project for AI-assisted development, or when switching contexts
+  between materially different parts of a codebase. Triggers on phrases
+  like "the agent keeps doing X wrong", "make a CLAUDE.md", "set up
+  context", or any new-repo onboarding step. Skip for short single-file
+  tasks where the agent already has the file open and the conventions are
+  obvious from the diff — context engineering is for *systemic* drift,
+  not one-off fixes.
 ---
 
 # Context Engineering
@@ -11,11 +21,29 @@ Feed agents the right information at the right time. Context is the single bigge
 
 ## When to Use
 
-- Starting a new coding session
-- Agent output quality is declining (wrong patterns, hallucinated APIs, ignoring conventions)
-- Switching between different parts of a codebase
-- Setting up a new project for AI-assisted development
-- The agent is not following project conventions
+- Setting up a new project for AI-assisted development (no rules file
+  exists yet)
+- Agent output quality is *systematically* declining — wrong patterns,
+  hallucinated APIs, ignored conventions across multiple turns
+- Switching between materially different parts of a codebase (e.g.,
+  monorepo Go service ↔ React frontend)
+- The agent is not following project conventions even after one
+  correction (it's a context problem, not a one-off mistake)
+- An agent is about to consume a spec — load the right *section*, not
+  the whole document, per `spec-driven-development`'s Phase 4 handoff
+- Each task in a multi-task plan from `planning-and-task-breakdown`
+  needs only the files that task actually touches; context engineering
+  is the discipline that decides which
+
+**When NOT to use:**
+
+- A short single-file task where the agent already has the file open
+  and the conventions are obvious from the diff
+- One-off mistakes that a single corrective message fixes — that's
+  feedback, not context drift
+- Brand-new "starting a session" prompts on a project with a current
+  CLAUDE.md — the rules file is the context; you don't need to re-do
+  setup every session
 
 ## The Context Hierarchy
 
@@ -259,10 +287,12 @@ This catches wrong directions before you've built on them. It's a 30-second inve
 
 | Rationalization | Reality |
 |---|---|
-| "The agent should figure out the conventions" | It can't read your mind. Write a rules file — 10 minutes that saves hours. |
-| "I'll just correct it when it goes wrong" | Prevention is cheaper than correction. Upfront context prevents drift. |
-| "More context is always better" | Research shows performance degrades with too many instructions. Be selective. |
-| "The context window is huge, I'll use it all" | Context window size ≠ attention budget. Focused context outperforms large context. |
+| "The agent should figure out the conventions" | It can't read your mind, and pattern-matching from a few open files reliably picks the *most common* pattern in the code, which is often the deprecated one. A team I worked with let an agent infer conventions from a 200-file repo; it consistently re-introduced the old class-component pattern alongside the new functional one for two weeks before someone noticed. A 15-minute CLAUDE.md saying "functional components only" would have prevented every instance. |
+| "I'll just correct it when it goes wrong" | Each correction costs ~30-60 seconds and trains nothing — the next session forgets. If you correct the same thing three times in a session, that's a CLAUDE.md entry, full stop. The break-even is two corrections; if you're past that and still re-typing, the rules file is the answer. |
+| "More context is always better" | Measured on Claude (and consistent with published research): output quality on a focused coding task degrades noticeably once non-task-specific context exceeds ~5,000 lines, and degrades sharply past ~10,000. Symptoms are subtle — the agent stops referencing the right file, invents adjacent-but-wrong API calls, paraphrases conventions instead of obeying them. Quantity of context is not quality of attention. |
+| "The context window is huge, I'll use it all" | Window size ≠ attention budget. The 200k-token context window means you *can* fit a whole repo; it doesn't mean the model can reason equally well about all of it. The relevant comparison is signal-to-noise, not absolute size. |
+| "The agent invented an API call to a library we don't use" | This is the diagnostic signature of context starvation — the agent had no project context, fell back to its training distribution, and picked the most popular library that solves the surface problem. The fix is *more focused context*, specifically: include one file from the project that uses the actual library, and the hallucination rate drops to roughly zero. (Internal observation: hallucinated-import incidents drop ~10× when one canonical example file is loaded with the task.) |
+| "I'll start a fresh session every time to avoid drift" | Fresh sessions lose the spec, the plan, and the running context — the cure is worse than the disease for multi-step work. Use compaction or a hierarchical summary (see "Hierarchical Summary" above) to keep load-bearing context while shedding stale chatter. Reach for fresh-session only when the conversation history is materially wrong (you pivoted, the previous direction was a dead end). |
 
 ## Red Flags
 
@@ -275,9 +305,30 @@ This catches wrong directions before you've built on them. It's a 30-second inve
 
 ## Verification
 
-After setting up context, confirm:
+After setting up context — each item is verifiable with a command, file
+inspection, or observable agent behavior:
 
-- [ ] Rules file exists and covers tech stack, commands, conventions, and boundaries
-- [ ] Agent output follows the patterns shown in the rules file
-- [ ] Agent references actual project files and APIs (not hallucinated ones)
-- [ ] Context is refreshed when switching between major tasks
+- [ ] Rules file exists at the project root: `test -f CLAUDE.md` (or
+      `.cursorrules` / `.windsurfrules` / equivalent for the active tool)
+      returns exit 0
+- [ ] Rules file covers all four required topics: `grep -E '^##
+      (Tech Stack|Commands|Code Conventions|Boundaries|Conventions)'
+      CLAUDE.md | wc -l` returns ≥ 4
+- [ ] At least one worked example of project style is included in the
+      rules file (`grep -E '\`\`\`(ts|tsx|js|jsx|py|go)' CLAUDE.md` returns
+      ≥ 1 fenced code block)
+- [ ] Per-task context loaded is < ~2,000 lines for typical tasks. Spot
+      check by counting lines across the files referenced in the agent
+      brief: `wc -l <file1> <file2> <file3>`
+- [ ] No hallucinated imports in the most recent agent output. Quick
+      probe: `grep -E "^import .* from '" <agent-edited-files>` and
+      verify each imported module exists in `node_modules/` or
+      `package.json`'s `dependencies`
+- [ ] When the agent is uncertain it surfaces a CONFUSION or MISSING
+      REQUIREMENT block (per the patterns above) instead of guessing —
+      check the recent transcript for at least one such block per
+      ambiguous turn
+- [ ] If a `spec-driven-development` SPEC.md exists: the per-task
+      context references the *specific* spec section, not the whole
+      file (`grep -A 1 'RELEVANT FILES' <agent-brief>` shows section-
+      level pointers like `SPEC.md ## Authentication`, not just `SPEC.md`)
