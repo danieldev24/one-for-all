@@ -75,8 +75,25 @@ Cross-cutting skills (loaded as needed at any phase):
    context-engineering          (when agent quality degrades)
    source-driven-development    (when grounding decisions in authoritative sources)
    doubt-driven-development     (when uncertainty is high)
-   frontend-ui-engineering      (when building UI)
+   frontend-ui-engineering      (when building web UI)
+   mobile-ui-engineering        (when building mobile UI — RN/Expo, Flutter, iOS, Android, KMP)
    api-and-interface-design     (when designing contracts)
+```
+
+Mobile pair (Build → Verify) mirrors the web pair:
+
+```
+   ┌────────────────────────────┐         ┌────────────────────────────┐
+   │   frontend-ui-engineering  │   →     │  browser-testing-with-     │
+   │     (web UI)               │         │    devtools                │
+   └────────────────────────────┘         └────────────────────────────┘
+
+   ┌────────────────────────────┐         ┌────────────────────────────┐
+   │   mobile-ui-engineering    │   →     │  mobile-simulator-testing  │
+   │     (native + cross-       │         │    (Xcode Sim, Android     │
+   │      platform mobile)      │         │     Emulator, Expo,        │
+   │                            │         │     Flutter DevTools, KMP) │
+   └────────────────────────────┘         └────────────────────────────┘
 ```
 
 ---
@@ -154,6 +171,13 @@ For each skill: the canonical forward edge plus 1–2 branch edges that are most
   - `code-review-and-quality` (`/ofa-review`) — if the UI is ready for review.
   - `performance-optimization` — if Core Web Vitals or render perf is the concern.
 
+#### `mobile-ui-engineering`
+- **Forward:** `mobile-simulator-testing` — verify the UI on a real simulator/emulator.
+- **Branches:**
+  - `code-review-and-quality` (`/ofa-review`) — if the UI is ready for review.
+  - `performance-optimization` — if frame rate, list-scroll perf, or startup time is the concern.
+  - `security-and-hardening` — when handling permissions, deep links, or platform-specific input boundaries.
+
 #### `api-and-interface-design`
 - **Forward:** `incremental-implementation` (`/ofa-build`) — implement against the contract.
 - **Branches:**
@@ -167,6 +191,13 @@ For each skill: the canonical forward edge plus 1–2 branch edges that are most
 - **Branches:**
   - `debugging-and-error-recovery` — if verification surfaced a bug.
   - `performance-optimization` — if rendering is slow.
+
+#### `mobile-simulator-testing`
+- **Forward:** `code-review-and-quality` (`/ofa-review`) — once verified on simulator/emulator, send for review.
+- **Branches:**
+  - `debugging-and-error-recovery` — if simulator surfaced a crash or unexpected behavior.
+  - `performance-optimization` — if frame rate, jank, or startup time is the concern.
+  - `mobile-ui-engineering` — if verification surfaced a UI architecture issue, not a runtime bug.
 
 #### `debugging-and-error-recovery`
 - **Forward:** `test-driven-development` (`/ofa-test`) — write a regression test that captures the bug, then fix.
