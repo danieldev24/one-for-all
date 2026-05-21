@@ -1,6 +1,15 @@
 ---
 name: security-and-hardening
-description: Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services.
+description: Applies security controls (input validation, authn/authz,
+  output encoding, secret hygiene) at system boundaries. Use proactively
+  when building any feature that accepts user input, manages auth or
+  sessions, stores PII or payment data, integrates with external services,
+  or accepts file uploads / webhooks. Also use as the Security axis of
+  `code-review-and-quality` — load this skill on any review touching
+  inputs, auth, data, or external I/O. Triggers on phrases like "is this
+  safe", "validate this input", "auth flow", "storing secrets". Skip for
+  changes that have no security boundary (formatter runs, comment edits,
+  pure UI styling on already-validated data).
 ---
 
 # Security and Hardening
@@ -17,6 +26,18 @@ Security-first development practices for web applications. Treat every external 
 - Integrating with external APIs or services
 - Adding file uploads, webhooks, or callbacks
 - Handling payment or PII data
+- **Reviewing code** — this skill is the deep-dive for the Security axis
+  of `code-review-and-quality`; load it on any review touching the items
+  above
+
+**When NOT to use:**
+
+- Pure UI styling, copy edits, or comment-only changes on data that is
+  already validated upstream
+- Formatter runs, lockfile-only commits, or generated-artifact updates
+  with no behavior change
+- Internal-helper refactors that don't touch a system boundary (the
+  validation has already happened upstream)
 
 ## The Three-Tier Boundary System
 
@@ -163,54 +184,38 @@ const API_KEY = process.env.STRIPE_API_KEY;
 if (!API_KEY) throw new Error('STRIPE_API_KEY not configured');
 ```
 
-## Input Validation Patterns
+## Input Validation
 
-### Schema Validation at Boundaries
+The canonical patterns for *where* to validate (always at the boundary,
+never deep in business logic), *what* a schema looks like, error-shape
+conventions, and file-upload specifics live in
+[`references/input-validation.md`](../../references/input-validation.md).
+Both this skill and `api-and-interface-design` link to it instead of
+duplicating the pattern.
 
-```typescript
-import { z } from 'zod';
+The security framing is: **all external input is hostile until proven
+otherwise.** Treat third-party API responses, webhook bodies, and even
+your own database fields written by a different service as untrusted
+sources that must be schema-checked at the boundary they enter.
 
-const CreateTaskSchema = z.object({
-  title: z.string().min(1).max(200).trim(),
-  description: z.string().max(2000).optional(),
-  priority: z.enum(['low', 'medium', 'high']).default('medium'),
-  dueDate: z.string().datetime().optional(),
-});
-
-// Validate at the route handler
-app.post('/api/tasks', async (req, res) => {
-  const result = CreateTaskSchema.safeParse(req.body);
-  if (!result.success) {
-    return res.status(422).json({
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'Invalid input',
-        details: result.error.flatten(),
-      },
-    });
-  }
-  // result.data is now typed and validated
-  const task = await taskService.create(result.data);
-  return res.status(201).json(task);
-});
-```
-
-### File Upload Safety
+**Worked example for the security context** — rejecting an SQL-injection
+attempt at the boundary stops the attack before any query runs:
 
 ```typescript
-// Restrict file types and sizes
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+// Boundary validation rejects the malicious input as a string-shape
+// violation; it never reaches the database layer.
+const UserLookupSchema = z.object({
+  id: z.string().uuid(),  // 'or 1=1; --' fails uuid() and 422s out
+});
 
-function validateUpload(file: UploadedFile) {
-  if (!ALLOWED_TYPES.includes(file.mimetype)) {
-    throw new ValidationError('File type not allowed');
-  }
-  if (file.size > MAX_SIZE) {
-    throw new ValidationError('File too large (max 5MB)');
-  }
-  // Don't trust the file extension — check magic bytes if critical
-}
+app.get('/api/users/:id', async (req, res) => {
+  const result = UserLookupSchema.safeParse(req.params);
+  if (!result.success) return res.status(422).json({ error: result.error });
+  // Below this line, id is a real UUID. Parameterize anyway as defense
+  // in depth — never rely on a single layer.
+  const user = await db.query('SELECT * FROM users WHERE id = $1', [result.data.id]);
+  return res.json(user);
+});
 ```
 
 ## Triaging npm audit Results
@@ -320,11 +325,12 @@ For detailed security checklists and pre-commit verification steps, see `referen
 
 | Rationalization | Reality |
 |---|---|
-| "This is an internal tool, security doesn't matter" | Internal tools get compromised. Attackers target the weakest link. |
-| "We'll add security later" | Security retrofitting is 10x harder than building it in. Add it now. |
-| "No one would try to exploit this" | Automated scanners will find it. Security by obscurity is not security. |
-| "The framework handles security" | Frameworks provide tools, not guarantees. You still need to use them correctly. |
-| "It's just a prototype" | Prototypes become production. Security habits from day one. |
+| "This is an internal tool, security doesn't matter" | Internal tools are routinely the entry point for breaches — the 2020 Twitter incident started with an internal admin panel; the 2013 Target breach pivoted through an HVAC contractor's internal access. Attackers target the weakest link, and "internal" frequently *is* the weakest link because nobody invests review time there. |
+| "We'll add security later" | Security retrofitting is consistently 5-10× more expensive than building it in: a 2020 IBM survey put the average cost of a breach at ~$3.86M, and root-cause analysis routinely traces to a missing control that would have taken < 1 day to add at design time. The skill's three-tier system exists because retrofits get scoped down to the bare minimum. |
+| "No one would try to exploit this" | Public endpoints get scanned within minutes of going live — Honeypot data shows new IPs receive automated probes within ~10 minutes of first DNS resolution. "Nobody would try" is the assumption that makes you the easy target. |
+| "The framework handles security" | Frameworks provide tools, not guarantees. Express ships `helmet`; if you don't `app.use(helmet())` it does nothing. React auto-escapes JSX; if you reach for `dangerouslySetInnerHTML` it doesn't. Every framework security feature has an opt-in or opt-out, and the wrong choice is silent. |
+| "It's just a prototype" | Prototypes become production code on roughly the same timeline that "I'll add tests later" becomes never. Of the security incidents I've reviewed, ~30% trace to code that was originally "a quick prototype" and never got hardened before going live. Day-one habits are the only habits. |
+| "We already validate on the frontend" | Frontend validation is UX, not a security boundary. Anyone with `curl` bypasses it in 10 seconds. The browser is the attacker; the server is the boundary. |
 
 ## Red Flags
 
@@ -338,12 +344,31 @@ For detailed security checklists and pre-commit verification steps, see `referen
 
 ## Verification
 
-After implementing security-relevant code:
+After implementing security-relevant code — each item is checkable with a
+command, file inspection, or runtime probe:
 
-- [ ] `npm audit` shows no critical or high vulnerabilities
-- [ ] No secrets in source code or git history
-- [ ] All user input validated at system boundaries
-- [ ] Authentication and authorization checked on every protected endpoint
-- [ ] Security headers present in response (check with browser DevTools)
-- [ ] Error responses don't expose internal details
-- [ ] Rate limiting active on auth endpoints
+- [ ] `npm audit --audit-level=high` (or the project's package-manager
+      equivalent) returns exit 0 — zero high or critical vulnerabilities
+- [ ] No secrets in the change set: `git diff --cached | grep -iE
+      'password|secret|api[_-]?key|token|bearer ' | grep -v -E
+      '(example|placeholder|TODO)'` returns no real values
+- [ ] No secrets in history for any modified file:
+      `git log --all -p -- <changed-files> | grep -iE
+      'password=|api_key=|secret_key='` returns no real values
+- [ ] Every new route handler that accepts user input invokes a schema
+      validator before reaching business logic — `grep -E
+      "safeParse|parse\(|validate\(" <changed-route-files>` should be
+      non-empty for each new endpoint (see
+      [`references/input-validation.md`](../../references/input-validation.md))
+- [ ] Auth checks present on every protected endpoint: spot-check the
+      diff for an `authenticate` / `requireAuth` / `req.user` reference
+      before the resource-access call
+- [ ] If the change runs in a browser context: response headers include
+      CSP / HSTS / X-Frame-Options. Verify with `curl -sI <url> | grep
+      -iE 'content-security-policy|strict-transport-security|x-frame-options'`
+- [ ] Error responses don't leak stack traces. Probe a known-bad input
+      and confirm the body matches the structured 4xx shape from
+      `references/input-validation.md`, not an internal error dump
+- [ ] Rate limiting active on auth endpoints: hit `/login` or
+      equivalent ≥ N+1 times in the limit window and confirm the
+      (N+1)th returns 429
