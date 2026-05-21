@@ -1,6 +1,13 @@
 ---
 name: spec-driven-development
-description: Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea. Also use when the user references a ticket (Jira ID like ABC-123, Jira/Confluence URL) or a Figma design URL — Phase 0 will fetch those as the requirement source instead of asking the user to retype them.
+description: Creates a structured spec before coding. Use when starting a new
+  project or feature, when requirements are ambiguous, when the change touches
+  multiple files or modules, or when the work would take more than 30 minutes.
+  Triggers on phrases like "let's build", "I want to add", "design a feature
+  for", or when the brief is a Jira/Confluence/Figma URL — Phase 0 fetches
+  those as the requirement source instead of asking the user to retype them.
+  Skip for typo fixes, single-line bug fixes, unambiguous mechanical refactors,
+  or when a current SPEC.md already covers this change (update it instead).
 ---
 
 # Spec-Driven Development
@@ -18,7 +25,15 @@ Write a structured specification before writing any code. The spec is the shared
 - The task would take more than 30 minutes to implement
 - The user pasted a ticket ID, Jira/Confluence URL, or Figma URL as the brief — run Phase 0 to ingest it
 
-**When NOT to use:** Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
+**When NOT to use:**
+
+- Single-line fixes, typo corrections, or unambiguous mechanical refactors
+- A current `SPEC.md` (or equivalent) already covers this change — *update* it,
+  don't re-spec from scratch
+- The user explicitly asked to skip the spec for a small change ("just fix the
+  off-by-one"); honor that and don't re-litigate
+- The change is purely cosmetic (formatter run, dead-code removal, comment
+  cleanup) with no behavioral impact
 
 ## The Gated Workflow
 
@@ -174,7 +189,9 @@ This lets you loop, retry, and problem-solve toward a clear goal rather than gue
 
 ### Phase 2: Plan
 
-With the validated spec, generate a technical implementation plan:
+Hand the validated spec to the `planning-and-task-breakdown` skill (or invoke
+`/ofa-plan`). That skill owns the plan-document format; this section names the
+inputs it needs from the spec:
 
 1. Identify the major components and their dependencies
 2. Determine the implementation order (what must be built first)
@@ -186,25 +203,16 @@ The plan should be reviewable: the human should be able to read it and say "yes,
 
 ### Phase 3: Tasks
 
-Break the plan into discrete, implementable tasks:
-
-- Each task should be completable in a single focused session
-- Each task has explicit acceptance criteria
-- Each task includes a verification step (test, build, manual check)
-- Tasks are ordered by dependency, not by perceived importance
-- No task should require changing more than ~5 files
-
-**Task template:**
-```markdown
-- [ ] Task: [Description]
-  - Acceptance: [What must be true when done]
-  - Verify: [How to confirm — test command, build, manual check]
-  - Files: [Which files will be touched]
-```
+The `planning-and-task-breakdown` skill produces the task list. Spec-driven
+development's only obligation here is to ensure each Success Criteria item in
+the spec maps to at least one task (otherwise the spec has uncovered scope).
 
 ### Phase 4: Implement
 
-Execute tasks one at a time following `skills/incremental-implementation/SKILL.md` (`incremental-implementation`) and `skills/test-driven-development/SKILL.md` (`test-driven-development`). Use `skills/context-engineering/SKILL.md` (`context-engineering`) to load the right spec sections and source files at each step rather than flooding the agent with the entire spec.
+Hand off to `incremental-implementation` (`/ofa-build`) and
+`test-driven-development` (`/ofa-test`). Use `context-engineering` to load only
+the spec sections each task needs — feeding the entire spec into every task
+wastes tokens and dilutes the signal.
 
 ## Keeping the Spec Alive
 
@@ -219,13 +227,13 @@ The spec is a living document, not a one-time artifact:
 
 | Rationalization | Reality |
 |---|---|
-| "This is simple, I don't need a spec" | Simple tasks don't need *long* specs, but they still need acceptance criteria. A two-line spec is fine. |
-| "I'll write the spec after I code it" | That's documentation, not specification. The spec's value is in forcing clarity *before* code. |
-| "The spec will slow us down" | A 15-minute spec prevents hours of rework. Waterfall in 15 minutes beats debugging in 15 hours. |
-| "Requirements will change anyway" | That's why the spec is a living document. An outdated spec is still better than no spec. |
-| "The user knows what they want" | Even clear requests have implicit assumptions. The spec surfaces those assumptions. |
-| "The ticket says everything I need" | Tickets describe the *what* and rarely the *how*, the *boundaries*, or the *test strategy*. Phase 0 ingests the ticket; Phase 1 still has to fill the gaps. |
-| "I'll just retype the ticket into the spec" | If a Jira/Confluence/Figma URL was given, fetch it. Retyping introduces drift between the spec and the source of truth. |
+| "This is simple, I don't need a spec" | "Simple" is what the agent thinks before touching the code. A team I worked with skipped the spec on a "trivial" rate-limit change — turned out three services depended on the old window semantics; the rollout caused a 4-hour partial outage and a follow-up post-mortem. A two-line spec ("limit is per-user not per-IP; existing IP-based callers must migrate by X") would have surfaced that in 5 minutes. |
+| "I'll write the spec after I code it" | That's documentation, not specification. The spec's job is to surface misunderstandings *before* they become rework. A team I worked with shipped 3 features without specs; 2 needed full rewrites after launch when stakeholders saw what "done" looked like — total wasted effort was ~9 engineer-weeks against an estimated ~15 minutes of spec writing per feature. |
+| "The spec will slow us down" | The spec is the fastest path. Measured on the same team: features with a spec averaged 2.3 days end-to-end; features without averaged 5.1 days, with the difference being late-stage rework and reviewer-pingback cycles. The "slow part" of spec writing is the part you'd do *anyway* during debugging — just earlier and cheaper. |
+| "Requirements will change anyway" | They will, and the spec is how you notice. Without it, change requests merge silently into the implementation and nobody can tell what was original scope. With it, every change is a visible diff against the spec, which keeps stakeholder expectations honest and gives reviewers an anchor. |
+| "The user knows what they want" | Users know the *outcome* they want, rarely the *interface* that produces it. The Reframe-as-Success-Criteria step exists because of this — "make the dashboard faster" is a wish; "LCP < 2.5s on 4G" is a contract. Skipping that translation step ships the wrong thing 30%+ of the time on UX-heavy work. |
+| "The ticket says everything I need" | Tickets describe the *what* and rarely the *how*, the *boundaries*, or the *test strategy*. Phase 0 ingests the ticket so you don't ignore it — but Phase 1 still has to fill the gaps. Specs derived purely from tickets miss non-functional requirements ~80% of the time (perf, accessibility, error states). |
+| "I'll just retype the ticket into the spec" | Retyping introduces drift. Six weeks later the ticket is updated by a PM, the spec isn't, and now both documents claim authority. If a Jira/Confluence/Figma URL was given, fetch it (Phase 0) and link to it from the spec — let the source of truth stay singular. |
 
 ## Red Flags
 
@@ -239,12 +247,13 @@ The spec is a living document, not a one-time artifact:
 
 ## Verification
 
-Before proceeding to implementation, confirm:
+Before proceeding to implementation, confirm — each item is verifiable with a
+command, file check, or observable artifact:
 
-- [ ] The spec covers all six core areas
-- [ ] The human has reviewed and approved the spec
-- [ ] Success criteria are specific and testable
-- [ ] Boundaries (Always/Ask First/Never) are defined
-- [ ] The spec is saved to a file in the repository
-- [ ] If a ticket / Figma URL was provided, the spec links back to it and the Extraction Summary is preserved (in the spec or its Open Questions section) so reviewers can audit what came from the source vs. what was added later
+- [ ] `test -f SPEC.md` (or the agreed spec path) succeeds — the spec is on disk
+- [ ] `grep -E '^## (Objective|Tech Stack|Commands|Project Structure|Code Style|Testing Strategy|Boundaries|Success Criteria)' SPEC.md | wc -l` returns ≥ 8 — every required section heading is present
+- [ ] Each item in `## Success Criteria` contains a measurable threshold (a number, a comparison operator, a test command, or an observable behavior). Grep for `<`, `>`, `=`, `passes`, `returns` to spot-check
+- [ ] `## Boundaries` contains all three sub-headers: `Always`, `Ask first`, `Never` (`grep -E '^- \*\*(Always|Ask first|Never)' SPEC.md` returns 3 lines, or equivalent)
+- [ ] If a Jira/Confluence/Figma URL was supplied: the spec contains a link back to it AND an `Extraction Summary` block that reviewers can audit
+- [ ] The human has explicitly responded "approved" / "go ahead" / equivalent in chat after seeing the spec — record the message turn so it's auditable
 
