@@ -9,7 +9,7 @@ skills/       → Core skills (SKILL.md per directory)
 agents/       → Reusable agent personas (code-reviewer, test-engineer, security-auditor)
 hooks/        → Session lifecycle hooks
 .claude/commands/ → Slash commands (/ofa-spec, /ofa-plan, /ofa-build, /ofa-test, /ofa-review, /ofa-code-simplify, /ofa-ship)
-references/   → Supplementary checklists (testing, performance, security, accessibility)
+references/   → Supplementary checklists (testing, performance, security, accessibility, mobile)
 docs/         → Setup guides for different tools
 ```
 
@@ -17,8 +17,8 @@ docs/         → Setup guides for different tools
 
 **Define:** interview-me, idea-refine, spec-driven-development
 **Plan:** planning-and-task-breakdown
-**Build:** incremental-implementation, test-driven-development, context-engineering, source-driven-development, doubt-driven-development, frontend-ui-engineering, api-and-interface-design
-**Verify:** browser-testing-with-devtools, debugging-and-error-recovery
+**Build:** incremental-implementation, test-driven-development, context-engineering, source-driven-development, doubt-driven-development, frontend-ui-engineering, mobile-ui-engineering, api-and-interface-design
+**Verify:** browser-testing-with-devtools, mobile-simulator-testing, debugging-and-error-recovery
 **Review:** code-review-and-quality, code-simplification, security-and-hardening, performance-optimization
 **Ship:** git-workflow-and-versioning, ci-cd-and-automation, deprecation-and-migration, documentation-and-adrs, shipping-and-launch
 

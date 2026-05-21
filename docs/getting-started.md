@@ -125,6 +125,7 @@ The `references/` directory contains supplementary checklists:
 | `performance-checklist.md` | performance-optimization |
 | `security-checklist.md` | security-and-hardening |
 | `accessibility-checklist.md` | frontend-ui-engineering |
+| `mobile-checklist.md` | mobile-ui-engineering, mobile-simulator-testing |
 
 Load a reference when you need detailed patterns beyond what the skill covers.
 

@@ -51,9 +51,9 @@ See [docs/getting-started.md](docs/getting-started.md) for usage details.
 
 ---
 
-## All 23 Skills
+## All 25 Skills
 
-The commands above are entry points. The pack includes 23 skills total — 22 lifecycle skills plus the `using-one-for-all` meta-skill. Each skill is a structured workflow with steps, verification gates, and anti-rationalization tables. You can also reference any skill directly.
+The commands above are entry points. The pack includes 25 skills total — 24 lifecycle skills plus the `using-one-for-all` meta-skill. Each skill is a structured workflow with steps, verification gates, and anti-rationalization tables. You can also reference any skill directly.
 
 ### Meta - Discover which skill applies
 
@@ -84,7 +84,8 @@ The commands above are entry points. The pack includes 23 skills total — 22 li
 | [context-engineering](skills/context-engineering/SKILL.md) | Feed agents the right information at the right time - rules files, context packing, MCP integrations | Starting a session, switching tasks, or when output quality drops |
 | [source-driven-development](skills/source-driven-development/SKILL.md) | Ground every framework decision in official documentation - verify, cite sources, flag what's unverified | You want authoritative, source-cited code for any framework or library |
 | [doubt-driven-development](skills/doubt-driven-development/SKILL.md) | Adversarial fresh-context review of every non-trivial decision in-flight - CLAIM → EXTRACT → DOUBT → RECONCILE → STOP, with optional user-authorized cross-model escalation | Stakes are high (production, security, irreversible), working in unfamiliar code, or a confident output is cheaper to verify now than to debug later |
-| [frontend-ui-engineering](skills/frontend-ui-engineering/SKILL.md) | Component architecture, design systems, state management, responsive design, WCAG 2.1 AA accessibility | Building or modifying user-facing interfaces |
+| [frontend-ui-engineering](skills/frontend-ui-engineering/SKILL.md) | Component architecture, design systems, state management, responsive design, WCAG 2.1 AA accessibility | Building or modifying web user-facing interfaces |
+| [mobile-ui-engineering](skills/mobile-ui-engineering/SKILL.md) | Mobile UI architecture across React Native/Expo, Flutter, native iOS, native Android, KMP — navigation, state, lists, gestures, lifecycle, mobile a11y | Building or modifying mobile app screens, navigation, or platform integrations |
 | [api-and-interface-design](skills/api-and-interface-design/SKILL.md) | Contract-first design, Hyrum's Law, One-Version Rule, error semantics, boundary validation | Designing APIs, module boundaries, or public interfaces |
 
 ### Verify - Prove it works
@@ -92,6 +93,7 @@ The commands above are entry points. The pack includes 23 skills total — 22 li
 | Skill | What It Does | Use When |
 |-------|-------------|----------|
 | [browser-testing-with-devtools](skills/browser-testing-with-devtools/SKILL.md) | Chrome DevTools MCP for live runtime data - DOM inspection, console logs, network traces, performance profiling | Building or debugging anything that runs in a browser |
+| [mobile-simulator-testing](skills/mobile-simulator-testing/SKILL.md) | Runtime verification on Xcode Simulator, Android Emulator, Expo Go/Dev Client, Flutter DevTools, KMP sim runs — cold launch, deep links, permissions, list perf, lifecycle | Verifying a mobile UI change before review |
 | [debugging-and-error-recovery](skills/debugging-and-error-recovery/SKILL.md) | Five-step triage: reproduce, localize, reduce, fix, guard. Stop-the-line rule, safe fallbacks | Tests fail, builds break, or behavior is unexpected |
 
 ### Review - Quality gates before merge
@@ -137,6 +139,7 @@ Quick-reference material that skills pull in when needed:
 | [security-checklist.md](references/security-checklist.md) | Pre-commit checks, auth, input validation, headers, CORS, OWASP Top 10 |
 | [performance-checklist.md](references/performance-checklist.md) | Core Web Vitals targets, frontend/backend checklists, measurement commands |
 | [accessibility-checklist.md](references/accessibility-checklist.md) | Keyboard nav, screen readers, visual design, ARIA, testing tools |
+| [mobile-checklist.md](references/mobile-checklist.md) | Permissions, app lifecycle, offline behavior, mobile a11y (VoiceOver/TalkBack, Dynamic Type), build/release identifiers, per-platform pitfalls |
 
 ---
 
@@ -175,7 +178,7 @@ Every skill follows a consistent anatomy:
 
 ```
 one-for-all/
-├── skills/                            # 23 skills (22 lifecycle + 1 meta)
+├── skills/                            # 25 skills (24 lifecycle + 1 meta)
 │   ├── interview-me/                  #   Define
 │   ├── idea-refine/                   #   Define
 │   ├── spec-driven-development/       #   Define
@@ -185,9 +188,11 @@ one-for-all/
 │   ├── source-driven-development/     #   Build
 │   ├── doubt-driven-development/      #   Build
 │   ├── frontend-ui-engineering/       #   Build
+│   ├── mobile-ui-engineering/         #   Build
 │   ├── test-driven-development/       #   Build
 │   ├── api-and-interface-design/      #   Build
 │   ├── browser-testing-with-devtools/ #   Verify
+│   ├── mobile-simulator-testing/      #   Verify
 │   ├── debugging-and-error-recovery/  #   Verify
 │   ├── code-review-and-quality/       #   Review
 │   ├── code-simplification/          #   Review
@@ -228,9 +233,10 @@ See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the format specification 
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest: **v1.1.0** —
-quality pass across the 23 skills (tighter triggers, executable
-verification, costed rationalizations, lifecycle handoff via `## Next`).
+See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest: **v1.2.0** —
+mobile engineering track: `mobile-ui-engineering` (Build) and
+`mobile-simulator-testing` (Verify) covering React Native/Expo, Flutter,
+native iOS, native Android, and Kotlin Multiplatform; `references/mobile-checklist.md`.
 
 ## License
 
