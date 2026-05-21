@@ -1,0 +1,47 @@
+  ✗  api-and-interface-design
+       ERROR: Missing required section: ## Next
+  ✗  browser-testing-with-devtools
+       ERROR: Missing required section: ## Next
+  ✗  ci-cd-and-automation
+       ERROR: Missing required section: ## Next
+  ✗  code-review-and-quality
+       ERROR: Missing required section: ## Next
+  ✗  code-simplification
+       ERROR: Missing required section: ## Next
+  ✗  context-engineering
+       ERROR: Missing required section: ## Next
+  ✗  debugging-and-error-recovery
+       ERROR: Missing required section: ## Next
+  ✗  deprecation-and-migration
+       ERROR: Missing required section: ## Next
+  ✗  documentation-and-adrs
+       ERROR: Missing required section: ## Next
+  ✗  doubt-driven-development
+       ERROR: Missing required section: ## Next
+  ✗  frontend-ui-engineering
+       ERROR: Missing required section: ## Next
+  ✗  git-workflow-and-versioning
+       ERROR: Missing required section: ## Next
+  ✓  idea-refine (section checks exempt)
+  ✗  incremental-implementation
+       ERROR: Missing required section: ## Next
+  ✗  interview-me
+       ERROR: Missing required section: ## Next
+  ✗  performance-optimization
+       ERROR: Missing required section: ## Next
+  ✗  planning-and-task-breakdown
+       ERROR: Missing required section: ## Next
+  ✗  security-and-hardening
+       ERROR: Missing required section: ## Next
+  ✗  shipping-and-launch
+       ERROR: Missing required section: ## Next
+  ✗  source-driven-development
+       ERROR: Missing required section: ## Next
+  ✗  spec-driven-development
+       ERROR: Missing required section: ## Next
+  ✗  test-driven-development
+       ERROR: Missing required section: ## Next
+  ✓  using-one-for-all (section checks exempt)
+
+23 skills checked [strict] — 21 error(s), 0 warning(s) — FAILED
+exit=1

@@ -1,0 +1,71 @@
+  ⚠ api-and-interface-design
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ browser-testing-with-devtools
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ ci-cd-and-automation
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ code-review-and-quality
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ code-simplification
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ context-engineering
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ debugging-and-error-recovery
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ deprecation-and-migration
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ documentation-and-adrs
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ doubt-driven-development
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ frontend-ui-engineering
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ git-workflow-and-versioning
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ idea-refine
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ incremental-implementation
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ interview-me
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ performance-optimization
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ planning-and-task-breakdown
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ security-and-hardening
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ shipping-and-launch
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ source-driven-development
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ spec-driven-development
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ test-driven-development
+       WARN:  No `## Next` section — cannot evaluate handoff
+       WARN:  Orphan: no other skill points to it
+  ⚠ using-one-for-all
+       WARN:  No `## Next` section — cannot evaluate handoff
+
+23 skill(s) checked — 0 error(s), 45 warning(s)
+exit=0
