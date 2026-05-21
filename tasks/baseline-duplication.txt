@@ -1,3 +1,0 @@
-No duplicate blocks of >= 5 eligible lines found.
-0 block(s) exceed the 4-line threshold.
-exit=0
