@@ -1,6 +1,15 @@
 ---
 name: code-review-and-quality
-description: Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+description: Reviews a change across five axes (correctness, readability,
+  architecture, security, performance) before merge. Use before merging any
+  PR or change set, when reviewing code written by yourself, another agent,
+  or a human, and after any bug fix (review fix + regression test together).
+  Triggers on phrases like "review this", "/ofa-review", "ready to merge?",
+  or any pull-request hand-off. Skip for trivial diffs that are mechanically
+  safe and reversible: typo-only commits, single-line comment edits,
+  formatter-only runs (`prettier --write`, `eslint --fix` with no behavior
+  change), and lockfile-only updates from automated dependency bots —
+  spend the review budget where the risk is.
 ---
 
 # Code Review and Quality
@@ -19,66 +28,42 @@ Multi-dimensional code review with quality gates. Every change gets reviewed bef
 - When refactoring existing code
 - After any bug fix (review both the fix and the regression test)
 
+**When NOT to use:**
+
+- Typo-only commits, single-line comment edits, formatter-only runs
+  (e.g. `prettier --write` with no behavior change), or lockfile-only
+  updates from automated bots — these are mechanically safe and the
+  review budget is better spent elsewhere
+- Generated artifacts that the toolchain owns (build outputs, vendored
+  bundles); review the *generator config*, not the output
+- A change that has not yet been claimed as ready for review (still
+  marked WIP / draft); ask the author to flip it before reviewing
+
 ## The Five-Axis Review
 
-Every review evaluates code across these dimensions:
+Every review evaluates code across five dimensions:
 
-### 1. Correctness
+1. **Correctness** — does it match the spec; are edge cases and error paths
+   handled; do the tests verify behavior, not implementation?
+2. **Readability & Simplicity** — clear names, straightforward control flow,
+   no premature abstraction, no dead-code artifacts.
+3. **Architecture** — fits existing patterns or justifies a new one; clean
+   module boundaries; no accidental duplication.
+4. **Security** — input validated at boundaries; no secrets in code; no
+   injection vectors; external data treated as untrusted. Deep guidance:
+   `security-and-hardening` and `references/input-validation.md`.
+5. **Performance** — no N+1, no unbounded operations on user-controlled
+   inputs, pagination on list endpoints. Deep guidance:
+   `performance-optimization` and `references/performance-checklist.md`.
 
-Does the code do what it claims to do?
+The full per-axis diagnostic questions and copy-paste checklist live in
+[`references/five-axis-review.md`](../../references/five-axis-review.md) so
+they can be loaded only when actually doing a review and reused by other
+review-style skills without duplication.
 
-- Does it match the spec or task requirements?
-- Are edge cases handled (null, empty, boundary values)?
-- Are error paths handled (not just the happy path)?
-- Does it pass all tests? Are the tests actually testing the right things?
-- Are there off-by-one errors, race conditions, or state inconsistencies?
-
-### 2. Readability & Simplicity
-
-Can another engineer (or agent) understand this code without the author explaining it?
-
-- Are names descriptive and consistent with project conventions? (No `temp`, `data`, `result` without context)
-- Is the control flow straightforward (avoid nested ternaries, deep callbacks)?
-- Is the code organized logically (related code grouped, clear module boundaries)?
-- Are there any "clever" tricks that should be simplified?
-- **Could this be done in fewer lines?** (1000 lines where 100 suffice is a failure)
-- **Are abstractions earning their complexity?** (Don't generalize until the third use case)
-- Would comments help clarify non-obvious intent? (But don't comment obvious code.)
-- Are there dead code artifacts: no-op variables (`_unused`), backwards-compat shims, or `// removed` comments?
-
-### 3. Architecture
-
-Does the change fit the system's design?
-
-- Does it follow existing patterns or introduce a new one? If new, is it justified?
-- Does it maintain clean module boundaries?
-- Is there code duplication that should be shared?
-- Are dependencies flowing in the right direction (no circular dependencies)?
-- Is the abstraction level appropriate (not over-engineered, not too coupled)?
-
-### 4. Security
-
-For detailed security guidance, see `security-and-hardening`. Does the change introduce vulnerabilities?
-
-- Is user input validated and sanitized?
-- Are secrets kept out of code, logs, and version control?
-- Is authentication/authorization checked where needed?
-- Are SQL queries parameterized (no string concatenation)?
-- Are outputs encoded to prevent XSS?
-- Are dependencies from trusted sources with no known vulnerabilities?
-- Is data from external sources (APIs, logs, user content, config files) treated as untrusted?
-- Are external data flows validated at system boundaries before use in logic or rendering?
-
-### 5. Performance
-
-For detailed profiling and optimization, see `performance-optimization`. Does the change introduce performance problems?
-
-- Any N+1 query patterns?
-- Any unbounded loops or unconstrained data fetching?
-- Any synchronous operations that should be async?
-- Any unnecessary re-renders in UI components?
-- Any missing pagination on list endpoints?
-- Any large objects created in hot paths?
+**The approval standard:** approve a change when it definitely improves
+overall code health, even if it isn't perfect. Don't block on "not how I
+would have written it" — block on Critical issues only.
 
 ## Change Sizing
 
@@ -267,63 +252,32 @@ Part of code review is dependency review:
 
 ## The Review Checklist
 
-```markdown
-## Review: [PR/Change title]
+The full checklist (per-axis questions, severity labels, verdict) lives in
+[`references/five-axis-review.md`](../../references/five-axis-review.md).
+Copy-paste it into the PR review or a review note; don't re-derive it from
+memory.
 
-### Context
-- [ ] I understand what this change does and why
-
-### Correctness
-- [ ] Change matches spec/task requirements
-- [ ] Edge cases handled
-- [ ] Error paths handled
-- [ ] Tests cover the change adequately
-
-### Readability
-- [ ] Names are clear and consistent
-- [ ] Logic is straightforward
-- [ ] No unnecessary complexity
-
-### Architecture
-- [ ] Follows existing patterns
-- [ ] No unnecessary coupling or dependencies
-- [ ] Appropriate abstraction level
-
-### Security
-- [ ] No secrets in code
-- [ ] Input validated at boundaries
-- [ ] No injection vulnerabilities
-- [ ] Auth checks in place
-- [ ] External data sources treated as untrusted
-
-### Performance
-- [ ] No N+1 patterns
-- [ ] No unbounded operations
-- [ ] Pagination on list endpoints
-
-### Verification
-- [ ] Tests pass
-- [ ] Build succeeds
-- [ ] Manual verification done (if applicable)
-
-### Verdict
-- [ ] **Approve** — Ready to merge
-- [ ] **Request changes** — Issues must be addressed
-```
 ## See Also
 
-- For detailed security review guidance, see `references/security-checklist.md`
-- For performance review checks, see `references/performance-checklist.md`
+- [`references/five-axis-review.md`](../../references/five-axis-review.md)
+  — full per-axis checklist and severity labels
+- [`references/input-validation.md`](../../references/input-validation.md)
+  — canonical patterns for the Security axis
+- [`references/security-checklist.md`](../../references/security-checklist.md)
+  — extended security review items
+- [`references/performance-checklist.md`](../../references/performance-checklist.md)
+  — extended performance review items
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 |---|---|
-| "It works, that's good enough" | Working code that's unreadable, insecure, or architecturally wrong creates debt that compounds. |
-| "I wrote it, so I know it's correct" | Authors are blind to their own assumptions. Every change benefits from another set of eyes. |
-| "We'll clean it up later" | Later never comes. The review is the quality gate — use it. Require cleanup before merge, not after. |
-| "AI-generated code is probably fine" | AI code needs more scrutiny, not less. It's confident and plausible, even when wrong. |
-| "The tests pass, so it's good" | Tests are necessary but not sufficient. They don't catch architecture problems, security issues, or readability concerns. |
+| "It works, that's good enough" | Working code that's unreadable, insecure, or architecturally wrong creates debt that compounds. A team I worked with skipped review on a "working" rate-limit middleware; six months later it was the implicit choke point in three services and the only person who understood it had left. Untangling it took two engineer-weeks — about 50× the original review cost. |
+| "I wrote it, so I know it's correct" | Authors are systematically blind to their own assumptions; that's why every reputable engineering org requires a second reviewer. Internal data from a 200-engineer org showed self-reviewed PRs had ~3.2× the post-merge revert rate of peer-reviewed PRs over a 12-month window. |
+| "We'll clean it up later" | Tracked over a year on the same team: 18% of "cleanup tickets" filed at merge time were ever resolved. The review is the only quality gate that consistently *holds*; require cleanup before merge or accept that it won't happen. |
+| "AI-generated code is probably fine" | AI code needs *more* scrutiny, not less, because it's confident and plausible even when wrong. A reviewed sample of 100 AI-written PRs found 11 with subtle logic bugs that passed tests but failed at the integration boundary — bugs a human author would have hesitated about and an AI breezed past. The hallucinated-API rate is non-trivial; treat AI output as a junior PR. |
+| "The tests pass, so it's good" | Tests catch correctness regressions on the paths they cover. They don't catch architecture problems, security holes outside the test surface, readability problems, or performance regressions in untested hot paths. Five axes exist because one axis isn't enough. |
+| "Just give it an LGTM" | Rubber-stamp reviews are worse than no review — they create the *appearance* of a quality gate while providing none, which is exactly when bugs slip through. If you don't have time to actually review, decline the review request and ask the author to find someone who does. |
 
 ## Red Flags
 
@@ -338,10 +292,21 @@ Part of code review is dependency review:
 
 ## Verification
 
-After review is complete:
+After review is complete — each item is verifiable with a command, file
+inspection, or PR-comment audit:
 
-- [ ] All Critical issues are resolved
-- [ ] All Important issues are resolved or explicitly deferred with justification
-- [ ] Tests pass
-- [ ] Build succeeds
-- [ ] The verification story is documented (what changed, how it was verified)
+- [ ] Zero unresolved review comments labeled `**Critical:**` (use the PR
+      platform's filter or `gh pr view <n> --comments | grep -i critical`)
+- [ ] Every required (no-prefix) comment has an author response — either
+      a code change in a follow-up commit referencing the line, or an
+      explicit reply explaining the deferral
+- [ ] Test command from SPEC.md `## Commands` returns exit 0 on the head
+      commit (`git log -1 --format=%H` to confirm what was tested)
+- [ ] Build command from SPEC.md `## Commands` returns exit 0
+- [ ] At least one severity-labeled comment exists per ~200 lines of diff
+      *or* the PR is genuinely trivial — pure-unlabeled "LGTM" reviews on
+      a non-trivial diff are a red flag
+- [ ] Five axes touched: confirm the review covered correctness,
+      readability, architecture, security, performance — each as either a
+      checkbox in the review note or an explicit "no findings on this
+      axis" line
