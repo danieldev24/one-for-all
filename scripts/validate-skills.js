@@ -24,6 +24,8 @@
  *   - Common Rationalizations table has >=3 data rows
  *   - Next section contains a markdown table with >=2 data rows
  *   - SKILL.md is <=500 lines
+ *   - checklist/numbered workflow lines avoid vague phrases without evidence
+ *   - non-exempt skills declare token metadata
  *
  * Checks (warnings, never block):
  *   - cross-skill references point to known skills
@@ -48,6 +50,25 @@ const MIN_VERIFICATION_ITEMS    = 3;
 const MIN_RATIONALIZATION_ROWS  = 3;
 const MIN_NEXT_ROWS             = 2;
 const MAX_SKILL_LINES           = 500;
+
+const VAGUE_PHRASES = [
+  'as needed',
+  'handle appropriately',
+  'ensure quality',
+  'improve ux',
+  'make robust',
+  'best practice',
+  'best practices',
+  'clean code',
+  'polish',
+];
+
+const CONCRETE_EVIDENCE_PATTERN = /`[^`]+`|https?:\/\/|\b(?:exit|returns?)\s+0\b|\b\d+(?:\.\d+)?\s*(?:%|ms|s|sec|secs|seconds?|m|min|mins|minutes?|h|hr|hrs|hours?|files?|lines?|items?|rows?|chars?|checks?)\b/i;
+
+const VALID_WORKFLOW_MODES = new Set(['lite', 'standard', 'strict']);
+const VALID_DEFAULT_OUTPUTS = new Set(['concise', 'standard', 'evidence-heavy']);
+const MIN_CONTEXT_FILES = 1;
+const MAX_CONTEXT_FILES = 12;
 
 // Sections every standard SKILL.md must contain.
 // Each entry is an array of acceptable heading strings — the first
@@ -193,6 +214,42 @@ function countTableRows(text) {
   return dataRows;
 }
 
+/**
+ * Find token-costly vague phrases in actionable lines. This checks checklist
+ * and numbered workflow lines, where vague advice is most likely to become
+ * agent behavior. Explanatory prose and examples are left alone unless they
+ * become an action item.
+ */
+function findVagueActionLines(content) {
+  const findings = [];
+  let inCodeFence = false;
+  const lines = content.split(/\r?\n/);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    if (/^```/.test(trimmed)) {
+      inCodeFence = !inCodeFence;
+      continue;
+    }
+    if (inCodeFence) continue;
+
+    const isActionLine = /^\s*(?:-\s+\[[ xX]?\]|\d+\.)\s+/.test(line);
+    if (!isActionLine) continue;
+    if (CONCRETE_EVIDENCE_PATTERN.test(line)) continue;
+
+    const lower = line.toLowerCase();
+    for (const phrase of VAGUE_PHRASES) {
+      if (lower.includes(phrase)) {
+        findings.push({ line: i + 1, phrase });
+        break;
+      }
+    }
+  }
+
+  return findings;
+}
+
 // ─── Checks ──────────────────────────────────────────────────────────────────
 //
 // Each check returns an array of result objects:
@@ -265,6 +322,51 @@ function checkSkill(dirName, knownSkills) {
     }
   }
 
+  // ── Token metadata
+  if (!exempt) {
+    const requiredMetadata = ['workflow_mode', 'max_context_files', 'default_output'];
+    for (const field of requiredMetadata) {
+      if (!fm[field]) {
+        results.push({
+          severity: 'warn',
+          skill: dirName,
+          check: 'token-metadata-missing',
+          message: `Missing token metadata field: ${field}`,
+        });
+      }
+    }
+
+    if (fm.workflow_mode && !VALID_WORKFLOW_MODES.has(fm.workflow_mode)) {
+      results.push({
+        severity: 'warn',
+        skill: dirName,
+        check: 'token-metadata-invalid',
+        message: `workflow_mode must be one of: ${[...VALID_WORKFLOW_MODES].join(', ')}`,
+      });
+    }
+
+    if (fm.max_context_files) {
+      const maxContextFiles = Number(fm.max_context_files);
+      if (!Number.isInteger(maxContextFiles) || maxContextFiles < MIN_CONTEXT_FILES || maxContextFiles > MAX_CONTEXT_FILES) {
+        results.push({
+          severity: 'warn',
+          skill: dirName,
+          check: 'token-metadata-invalid',
+          message: `max_context_files must be an integer from ${MIN_CONTEXT_FILES} to ${MAX_CONTEXT_FILES}`,
+        });
+      }
+    }
+
+    if (fm.default_output && !VALID_DEFAULT_OUTPUTS.has(fm.default_output)) {
+      results.push({
+        severity: 'warn',
+        skill: dirName,
+        check: 'token-metadata-invalid',
+        message: `default_output must be one of: ${[...VALID_DEFAULT_OUTPUTS].join(', ')}`,
+      });
+    }
+  }
+
   // ── v1.1 Check C: Verification has >=3 checklist items
   if (!exempt) {
     const verificationBody = getSectionBody(content, '## Verification');
@@ -301,6 +403,16 @@ function checkSkill(dirName, knownSkills) {
   // ── v1.1 Check F: file size cap
   if (lineCount > MAX_SKILL_LINES) {
     results.push({ severity: 'warn', skill: dirName, check: 'line-count', message: `SKILL.md is ${lineCount} lines — over the ${MAX_SKILL_LINES}-line cap; extract content to references/` });
+  }
+
+  // ── Check G: vague semantic phrases in actionable lines
+  for (const finding of findVagueActionLines(content)) {
+    results.push({
+      severity: 'warn',
+      skill: dirName,
+      check: 'semantic-vague-phrase',
+      message: `Vague phrase "${finding.phrase}" on line ${finding.line} lacks concrete evidence; name the command, threshold, file check, or observable result.`,
+    });
   }
 
   // ── Cross-skill references (always warn, never error)
@@ -341,6 +453,8 @@ function main() {
     'next-rows',
     'section-next',
     'line-count',
+    'token-metadata-missing',
+    'token-metadata-invalid',
   ]);
 
   const allResults = [];

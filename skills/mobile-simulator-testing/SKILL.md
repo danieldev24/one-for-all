@@ -1,6 +1,9 @@
 ---
 name: mobile-simulator-testing
 description: Verifies mobile builds on real simulators and emulators — Xcode Simulator, Android Emulator, Expo Go / Dev Client, Flutter DevTools, and Kotlin Multiplatform iOS+Android sim runs. Use when a mobile UI change has been written and needs runtime verification before review: launches without crash, navigation back-stack is correct, list scroll holds frame rate on a low-end profile, permission flows behave on grant and on denial, deep links open the right screen, and offline state degrades gracefully. Skip for web frontends — use browser-testing-with-devtools instead.
+workflow_mode: standard
+max_context_files: 6
+default_output: evidence-heavy
 ---
 
 # Mobile Simulator Testing

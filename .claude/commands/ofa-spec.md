@@ -10,6 +10,8 @@ Begin by understanding what the user wants to build. Ask clarifying questions ab
 3. Tech stack preferences and constraints
 4. Known boundaries (what to always do, ask first about, and never do)
 
+Before writing a new spec, create `specs/` if needed and ensure the target project's `.gitignore` contains `specs/`. Preserve existing `.gitignore` content.
+
 Then generate a structured spec covering all six core areas: objective, commands, project structure, code style, testing strategy, and boundaries.
 
-Save the spec as SPEC.md in the project root and confirm with the user before proceeding.
+Save the spec as `specs/<feature-slug>.md` using a short kebab-case slug from the feature, ticket, or change name. Confirm the spec path with the user before proceeding.

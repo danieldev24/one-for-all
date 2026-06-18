@@ -87,14 +87,14 @@
 - Verify: strict validation plus lifecycle-chain check.
 
 **Acceptance criteria:**
-- [ ] `skills/using-one-for-all/SKILL.md` references the token policy and skill selection guide.
-- [ ] The routing process prefers one primary skill plus only necessary companion skills.
-- [ ] Red flags include over-loading unrelated skills or broad references.
+- [x] `skills/using-one-for-all/SKILL.md` references the token policy and skill selection guide.
+- [x] The routing process prefers one primary skill plus only necessary companion skills.
+- [x] Red flags include over-loading unrelated skills or broad references.
 
 **Verification:**
-- [ ] `node scripts/validate-skills.js --strict`
-- [ ] `node scripts/check-lifecycle-chain.js`
-- [ ] Manual check: `using-one-for-all` remains a router, not a duplicate of every skill.
+- [x] `node scripts/validate-skills.js --strict`
+- [x] `node scripts/check-lifecycle-chain.js`
+- [x] Manual check: `using-one-for-all` remains a router, not a duplicate of every skill.
 
 **Dependencies:** Tasks 1, 2
 
@@ -111,14 +111,14 @@
 - Verify: strict validation plus dedup scan.
 
 **Acceptance criteria:**
-- [ ] `planning-and-task-breakdown` explains how to produce a concise plan when scope is small.
-- [ ] `incremental-implementation` explains how to inspect only directly relevant files before expanding context.
-- [ ] Any reusable guidance over roughly 100 lines is linked from `references/`, not copied into both skills.
+- [x] `planning-and-task-breakdown` explains how to produce a concise plan when scope is small.
+- [x] `incremental-implementation` explains how to inspect only directly relevant files before expanding context.
+- [x] Any reusable guidance over roughly 100 lines is linked from `references/`, not copied into both skills.
 
 **Verification:**
-- [ ] `node scripts/validate-skills.js --strict`
-- [ ] `node scripts/scan-duplication.js`
-- [ ] Manual check: each pilot skill keeps at least one concrete worked example.
+- [x] `node scripts/validate-skills.js --strict`
+- [x] `node scripts/scan-duplication.js`
+- [x] Manual check: each pilot skill keeps at least one concrete worked example.
 
 **Dependencies:** Tasks 1, 3, 4
 
@@ -137,14 +137,14 @@
 - Verify: validator tests plus strict validation.
 
 **Acceptance criteria:**
-- [ ] `scripts/validate-skills.js` reports vague phrases such as "as needed", "ensure quality", or "best practice" when they lack concrete evidence.
-- [ ] Fixture tests cover passing and failing examples for the new semantic checks.
-- [ ] The rule starts with a warning unless the team chooses to make it strict immediately.
+- [x] `scripts/validate-skills.js` reports vague phrases such as "as needed", "ensure quality", or "best practice" when they lack concrete evidence.
+- [x] Fixture tests cover passing and failing examples for the new semantic checks.
+- [x] The rule starts with a warning unless the team chooses to make it strict immediately.
 
 **Verification:**
-- [ ] `node scripts/test-validator.js`
-- [ ] `node scripts/validate-skills.js --strict`
-- [ ] Manual check: failures include actionable messages with the skill name and check name.
+- [x] `node scripts/test-validator.js`
+- [x] `node scripts/validate-skills.js --strict`
+- [x] Manual check: failures include actionable messages with the skill name and check name.
 
 **Dependencies:** Task 3
 
@@ -164,14 +164,14 @@
 - Verify: targeted `rg` plus manual command review.
 
 **Acceptance criteria:**
-- [ ] `/ofa-plan`, `/ofa-build`, `/ofa-test`, and `/ofa-review` mention concise output expectations.
-- [ ] Commands say to escalate from `lite` only when risk, ambiguity, failing verification, or user request warrants it.
-- [ ] Commands still call the same canonical skills as before.
+- [x] `/ofa-plan`, `/ofa-build`, `/ofa-test`, and `/ofa-review` mention concise output expectations.
+- [x] Commands say to escalate from `lite` only when risk, ambiguity, failing verification, or user request warrants it.
+- [x] Commands still call the same canonical skills as before.
 
 **Verification:**
-- [ ] `rg 'lite|standard|strict|concise|escalate' .claude/commands .codex .Codex 2>/dev/null`
-- [ ] Manual check: no command removes required verification language.
-- [ ] Manual check: command wording stays short enough to avoid becoming a context sink.
+- [x] `rg 'lite|standard|strict|concise|escalate' .claude/commands .codex .Codex 2>/dev/null`
+- [x] Manual check: no command removes required verification language.
+- [x] Manual check: command wording stays short enough to avoid becoming a context sink.
 
 **Dependencies:** Tasks 1, 4, 5
 
@@ -185,9 +185,9 @@
 
 ## Checkpoint: Core Behavior
 
-- [ ] `node scripts/validate-skills.js --strict` passes after pilot edits.
-- [ ] `node scripts/scan-duplication.js` passes after shared guidance extraction.
-- [ ] Slash commands still point to the same canonical lifecycle skills.
+- [x] `node scripts/validate-skills.js --strict` passes after pilot edits.
+- [x] `node scripts/scan-duplication.js` passes after shared guidance extraction.
+- [x] Slash commands still point to the same canonical lifecycle skills.
 
 ## Task 8: Roll out metadata pack-wide
 
@@ -197,14 +197,14 @@
 - Verify: strict validation plus metadata search.
 
 **Acceptance criteria:**
-- [ ] Every non-exempt skill has the agreed metadata fields.
-- [ ] Metadata values match the skill's actual risk and context needs.
-- [ ] The rollout avoids changing process prose unless necessary for consistency.
+- [x] Every non-exempt skill has the agreed metadata fields.
+- [x] Metadata values match the skill's actual risk and context needs.
+- [x] The rollout avoids changing process prose unless necessary for consistency.
 
 **Verification:**
-- [ ] `node scripts/validate-skills.js --strict`
-- [ ] `rg '^workflow_mode:|^max_context_files:|^default_output:' skills`
-- [ ] Manual spot-check: at least five skills from different phases have sensible values.
+- [x] `node scripts/validate-skills.js --strict`
+- [x] `rg '^workflow_mode:|^max_context_files:|^default_output:' skills`
+- [x] Manual spot-check: at least five skills from different phases have sensible values.
 
 **Dependencies:** Tasks 3, 5, 6
 
@@ -221,14 +221,14 @@
 - Verify: dedup scan plus strict validation.
 
 **Acceptance criteria:**
-- [ ] Repeated progressive-disclosure guidance lives in `references/token-efficiency.md`.
-- [ ] Skills keep only task-specific rules and short references to shared guidance.
-- [ ] Dedup scan reports zero duplicated blocks at the configured threshold.
+- [x] Repeated progressive-disclosure guidance lives in `references/token-efficiency.md`.
+- [x] Skills keep only task-specific rules and short references to shared guidance.
+- [x] Dedup scan reports zero duplicated blocks at the configured threshold.
 
 **Verification:**
-- [ ] `node scripts/scan-duplication.js`
-- [ ] `node scripts/validate-skills.js --strict`
-- [ ] Manual check: skill files remain understandable when read alone.
+- [x] `node scripts/scan-duplication.js`
+- [x] `node scripts/validate-skills.js --strict`
+- [x] Manual check: skill files remain understandable when read alone.
 
 **Dependencies:** Tasks 5, 8
 
@@ -246,15 +246,16 @@
 - Verify: all quality scripts plus manual dogfood review.
 
 **Acceptance criteria:**
-- [ ] All existing validation scripts pass.
-- [ ] A dogfood note records at least three representative prompts and the selected mode/skill path.
-- [ ] The final review calls out remaining tradeoffs or follow-up work.
+- [x] All existing validation scripts pass.
+- [x] A dogfood note records at least three representative prompts and the selected mode/skill path.
+- [x] The final review calls out remaining tradeoffs or follow-up work.
 
 **Verification:**
-- [ ] `node scripts/validate-skills.js --strict`
-- [ ] `node scripts/scan-duplication.js`
-- [ ] `node scripts/check-lifecycle-chain.js`
-- [ ] Manual check: dogfood examples demonstrate smaller context paths than the previous all-purpose flow.
+- [x] `node scripts/validate-skills.js --strict`
+- [x] `node scripts/validate-commands.js`
+- [x] `node scripts/scan-duplication.js`
+- [x] `node scripts/check-lifecycle-chain.js`
+- [x] Manual check: dogfood examples demonstrate smaller context paths than the previous all-purpose flow.
 
 **Dependencies:** Tasks 1-9
 
@@ -266,7 +267,8 @@
 
 ## Checkpoint: Complete
 
-- [ ] `node scripts/validate-skills.js --strict` passes.
-- [ ] `node scripts/scan-duplication.js` passes.
-- [ ] `node scripts/check-lifecycle-chain.js` passes.
-- [ ] Human approves the final dogfood notes before implementation is considered complete.
+- [x] `node scripts/validate-skills.js --strict` passes.
+- [x] `node scripts/validate-commands.js` passes.
+- [x] `node scripts/scan-duplication.js` passes.
+- [x] `node scripts/check-lifecycle-chain.js` passes.
+- [x] Human approves the final dogfood notes before implementation is considered complete.

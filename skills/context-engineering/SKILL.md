@@ -11,6 +11,9 @@ description: Curates what an agent sees, when, and in what shape — rules
   tasks where the agent already has the file open and the conventions are
   obvious from the diff — context engineering is for *systemic* drift,
   not one-off fixes.
+workflow_mode: standard
+max_context_files: 6
+default_output: concise
 ---
 
 # Context Engineering
@@ -328,10 +331,11 @@ inspection, or observable agent behavior:
       REQUIREMENT block (per the patterns above) instead of guessing —
       check the recent transcript for at least one such block per
       ambiguous turn
-- [ ] If a `spec-driven-development` SPEC.md exists: the per-task
+- [ ] If a `spec-driven-development` spec file exists under `specs/`: the per-task
       context references the *specific* spec section, not the whole
       file (`grep -A 1 'RELEVANT FILES' <agent-brief>` shows section-
-      level pointers like `SPEC.md ## Authentication`, not just `SPEC.md`)
+      level pointers like `specs/auth-flow.md ## Authentication`, not just
+      `specs/auth-flow.md`)
 
 ## Next
 

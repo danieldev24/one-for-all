@@ -109,6 +109,16 @@ console.log('\nTest 1: all-passing fixture');
     passingResults,
     r => r.check === 'section-next'
   );
+  assertNoResult(
+    'no semantic warnings on all-passing (vague phrase with evidence)',
+    passingResults,
+    r => r.check === 'semantic-vague-phrase'
+  );
+  assertNoResult(
+    'no token metadata warnings on all-passing',
+    passingResults,
+    r => r.check === 'token-metadata-missing' || r.check === 'token-metadata-invalid'
+  );
 }
 
 // ─── Test 2: all-failing fixture emits a warning for each v1.1 check ─────────
@@ -137,6 +147,14 @@ console.log('\nTest 2: all-failing fixture');
   // Check D: <3 rationalization rows (fixture has 1)
   assertResult('flags rationalization-rows', failing,
     r => r.check === 'rationalization-rows' && r.severity === 'warn');
+
+  // Check G: vague semantic phrase without concrete evidence
+  assertResult('flags semantic-vague-phrase', failing,
+    r => r.check === 'semantic-vague-phrase' && r.severity === 'warn');
+
+  // Check H: non-exempt skills require token metadata
+  assertResult('flags missing token metadata', failing,
+    r => r.check === 'token-metadata-missing' && r.severity === 'warn');
 }
 
 // ─── Test 3: --strict promotes v1.1 warnings to errors ───────────────────────
@@ -150,6 +168,10 @@ console.log('\nTest 3: --strict promotes warnings');
     r => r.check === 'description-min-length' && r.severity === 'error');
   assertResult('strict makes section-next an error', failing,
     r => r.check === 'section-next' && r.severity === 'error');
+  assertResult('strict keeps semantic-vague-phrase as a warning', failing,
+    r => r.check === 'semantic-vague-phrase' && r.severity === 'warn');
+  assertResult('strict makes token-metadata-missing an error', failing,
+    r => r.check === 'token-metadata-missing' && r.severity === 'error');
   assertResult('strict exits 1 when v1.1 checks fail', [], () => exitCode === 1, { expectCount: 0 });
   // ^ predicate uses exitCode; expectCount: 0 + matches=0 means asserted-correct
   if (exitCode !== 1) {
@@ -213,6 +235,62 @@ console.log('\nTest 4: line-count cap (Check F)');
     r => r.check === 'line-count' && r.severity === 'warn');
 
   // Cleanup
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+}
+
+// ─── Test 5: invalid token metadata is reported ──────────────────────────────
+
+console.log('\nTest 5: token metadata validation');
+{
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ofa-validator-'));
+  const invalidDir = path.join(tmpDir, 'invalid-token-metadata');
+  fs.mkdirSync(invalidDir);
+  const fixture = [
+    '---',
+    'name: invalid-token-metadata',
+    'description: Fixture skill with invalid token metadata. Use when validating metadata value checks in the skill validator.',
+    'workflow_mode: turbo',
+    'max_context_files: many',
+    'default_output: verbose',
+    '---',
+    '',
+    '# Invalid Token Metadata',
+    '',
+    '## Overview',
+    'A minimal fixture for invalid metadata.',
+    '',
+    '## When to Use',
+    '- Validator regression test',
+    '',
+    '## Common Rationalizations',
+    '| R | Reality |',
+    '|---|---|',
+    '| a | b |',
+    '| c | d |',
+    '| e | f |',
+    '',
+    '## Red Flags',
+    '- one',
+    '',
+    '## Verification',
+    '- [ ] one',
+    '- [ ] two',
+    '- [ ] three',
+    '',
+    '## Next',
+    '| Situation | Suggest |',
+    '|---|---|',
+    '| a | `b` |',
+    '| c | `d` |',
+  ].join('\n');
+  fs.writeFileSync(path.join(invalidDir, 'SKILL.md'), fixture + '\n');
+
+  const { results } = runValidator({ skillsDir: tmpDir });
+  const invalidResults = results.filter(r => r.skill === 'invalid-token-metadata');
+  assertResult('flags invalid token metadata values', invalidResults,
+    r => r.check === 'token-metadata-invalid' && r.severity === 'warn',
+    { expectCount: 3 });
+
   fs.rmSync(tmpDir, { recursive: true, force: true });
 }
 

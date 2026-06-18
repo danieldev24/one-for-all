@@ -1,6 +1,9 @@
 ---
 name: deprecation-and-migration
 description: Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.
+workflow_mode: strict
+max_context_files: 8
+default_output: evidence-heavy
 ---
 
 # Deprecation and Migration

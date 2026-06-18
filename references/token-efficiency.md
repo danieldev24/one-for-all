@@ -22,6 +22,19 @@ skipping verification.
   read the specialized skill, authoritative references, tests, and review
   checklist.
 
+## Lite Entry Gate
+
+Use `lite` only when all of these are true:
+
+- The change touches no more than two files.
+- The acceptance criteria fit in three bullets or fewer.
+- The task has no security, privacy, auth, deployment, migration, data-loss,
+  performance, or public-contract risk.
+- The verification command or file check is obvious before editing.
+- The user has not asked for deeper analysis.
+
+If any item is false, start in `standard` or `strict`.
+
 ## Progressive Disclosure
 
 Start with the narrowest useful context:

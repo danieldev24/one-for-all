@@ -10,6 +10,9 @@ description: Applies security controls (input validation, authn/authz,
   safe", "validate this input", "auth flow", "storing secrets". Skip for
   changes that have no security boundary (formatter runs, comment edits,
   pure UI styling on already-validated data).
+workflow_mode: strict
+max_context_files: 8
+default_output: evidence-heavy
 ---
 
 # Security and Hardening

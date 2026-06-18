@@ -1,6 +1,9 @@
 ---
 name: mobile-ui-engineering
 description: Guides agents through production-quality mobile UI architecture — navigation, state, lists, gestures, app lifecycle, and platform accessibility — across React Native/Expo, Flutter, native iOS (Swift/SwiftUI), native Android (Kotlin/Jetpack Compose), and Kotlin Multiplatform (KMP). Use when the project ships a mobile app: detect via package.json with react-native or expo, pubspec.yaml with flutter, *.xcodeproj or Package.swift, build.gradle with the android plugin, or kotlin sources under shared/commonMain. Use when adding screens, list views, gestures, navigation flows, or platform integrations on mobile. Skip for web-only frontends — use frontend-ui-engineering instead.
+workflow_mode: standard
+max_context_files: 6
+default_output: evidence-heavy
 ---
 
 # Mobile UI Engineering

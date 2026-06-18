@@ -131,11 +131,14 @@ Load a reference when you need detailed patterns beyond what the skill covers.
 
 ## Spec and task artifacts
 
-The `/ofa-spec` and `/ofa-plan` commands create working artifacts (`SPEC.md`, `tasks/plan.md`, `tasks/todo.md`). Treat them as **living documents** while the work is in progress:
+The `/ofa-spec` and `/ofa-plan` commands create working artifacts (`specs/<feature-slug>.md`, `tasks/plan.md`, `tasks/todo.md`). Treat them as **living documents** while the work is in progress:
 
-- Keep them in version control during development so the human and the agent have a shared source of truth.
+- `/ofa-spec` creates `specs/` if needed and adds `specs/` to the target
+  project's `.gitignore` by default, so local planning notes do not leak into
+  product repositories accidentally.
 - Update them when scope or decisions change.
-- If your repo doesn’t want these files long‑term, delete them before merge or add the folder to `.gitignore` — the workflow doesn’t require them to be permanent.
+- If your repo intentionally versions specs, remove the `specs/` ignore entry
+  only after the human approves that repository policy.
 
 ## Tips
 

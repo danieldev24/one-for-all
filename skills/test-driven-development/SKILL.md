@@ -10,6 +10,9 @@ description: Writes a failing test before the code that satisfies it; for bug
   observable behavior. For *behavioral* config (feature flags, env-driven
   branches, schema changes), still write a test — config that changes
   behavior is behavior.
+workflow_mode: standard
+max_context_files: 6
+default_output: evidence-heavy
 ---
 
 # Test-Driven Development
@@ -386,7 +389,7 @@ For detailed testing patterns, examples, and anti-patterns across frameworks, se
 After completing any implementation — each item is verifiable with a
 command, file inspection, or runnable artifact:
 
-- [ ] `npm test` (or the project's test command from SPEC.md `## Commands`)
+- [ ] `npm test` (or the project's test command from the spec file's `## Commands`)
       returns exit 0
 - [ ] At least one new test was added in this change set:
       `git diff --stat <base-sha>..HEAD -- '*.test.*' '**/__tests__/**'`

@@ -7,7 +7,11 @@ description: Creates a structured spec before coding. Use when starting a new
   for", or when the brief is a Jira/Confluence/Figma URL — Phase 0 fetches
   those as the requirement source instead of asking the user to retype them.
   Skip for typo fixes, single-line bug fixes, unambiguous mechanical refactors,
-  or when a current SPEC.md already covers this change (update it instead).
+  or when a current spec under `specs/` already covers this change (update it
+  instead).
+workflow_mode: standard
+max_context_files: 5
+default_output: concise
 ---
 
 # Spec-Driven Development
@@ -28,8 +32,8 @@ Write a structured specification before writing any code. The spec is the shared
 **When NOT to use:**
 
 - Single-line fixes, typo corrections, or unambiguous mechanical refactors
-- A current `SPEC.md` (or equivalent) already covers this change — *update* it,
-  don't re-spec from scratch
+- A current spec under `specs/` (or equivalent) already covers this change —
+  *update* it, don't re-spec from scratch
 - The user explicitly asked to skip the spec for a small change ("just fix the
   off-by-one"); honor that and don't re-litigate
 - The change is purely cosmetic (formatter run, dead-code removal, comment
@@ -106,6 +110,16 @@ ASSUMPTIONS I'M MAKING:
 ```
 
 Don't silently fill in ambiguous requirements. The spec's entire purpose is to surface misunderstandings *before* code gets written — assumptions are the most dangerous form of misunderstanding.
+
+**Prepare spec storage before writing a new spec:**
+
+1. Create `specs/` in the target project if it does not exist.
+2. Ensure the target project's `.gitignore` contains `specs/` before saving
+   the new spec there. Add the entry if missing, preserving existing content.
+3. Save new specs as `specs/<feature-slug>.md`, using a short kebab-case slug
+   from the feature name, ticket key, or user-facing change.
+4. If an existing spec already covers the change, update that file instead of
+   creating a duplicate.
 
 **Write a spec document covering these six core areas:**
 
@@ -220,7 +234,10 @@ The spec is a living document, not a one-time artifact:
 
 - **Update when decisions change** — If you discover the data model needs to change, update the spec first, then implement.
 - **Update when scope changes** — Features added or cut should be reflected in the spec.
-- **Commit the spec** — The spec belongs in version control alongside the code.
+- **Keep the spec discoverable** — Specs live under `specs/`; because that
+  folder is ignored by default for projects using OFA, record the spec path in
+  chat, plan files, or PR notes. If a project wants versioned specs, ask before
+  removing `specs/` from `.gitignore`.
 - **Reference the spec in PRs** — Link back to the spec section that each PR implements.
 
 ## Common Rationalizations
@@ -250,10 +267,14 @@ The spec is a living document, not a one-time artifact:
 Before proceeding to implementation, confirm — each item is verifiable with a
 command, file check, or observable artifact:
 
-- [ ] `test -f SPEC.md` (or the agreed spec path) succeeds — the spec is on disk
-- [ ] `grep -E '^## (Objective|Tech Stack|Commands|Project Structure|Code Style|Testing Strategy|Boundaries|Success Criteria)' SPEC.md | wc -l` returns ≥ 8 — every required section heading is present
+- [ ] `test -d specs` succeeds — the target project's spec folder exists
+- [ ] `grep -Fx 'specs/' .gitignore` succeeds — the generated specs folder is
+  ignored by the target project
+- [ ] `test -f specs/<feature-slug>.md` succeeds — the spec is on disk in the
+  spec folder
+- [ ] `grep -E '^## (Objective|Tech Stack|Commands|Project Structure|Code Style|Testing Strategy|Boundaries|Success Criteria)' specs/<feature-slug>.md | wc -l` returns ≥ 8 — every required section heading is present
 - [ ] Each item in `## Success Criteria` contains a measurable threshold (a number, a comparison operator, a test command, or an observable behavior). Grep for `<`, `>`, `=`, `passes`, `returns` to spot-check
-- [ ] `## Boundaries` contains all three sub-headers: `Always`, `Ask first`, `Never` (`grep -E '^- \*\*(Always|Ask first|Never)' SPEC.md` returns 3 lines, or equivalent)
+- [ ] `## Boundaries` contains all three sub-headers: `Always`, `Ask first`, `Never` (`grep -E '^- \*\*(Always|Ask first|Never)' specs/<feature-slug>.md` returns 3 lines, or equivalent)
 - [ ] If a Jira/Confluence/Figma URL was supplied: the spec contains a link back to it AND an `Extraction Summary` block that reviewers can audit
 - [ ] The human has explicitly responded "approved" / "go ahead" / equivalent in chat after seeing the spec — record the message turn so it's auditable
 
@@ -269,4 +290,3 @@ that matches the situation:
 | Change is small and obvious — skip planning | `/ofa-build` (`incremental-implementation`) |
 
 End the conversation turn with: `Next: I recommend <skill-or-command> because <one-line reason>.`
-

@@ -1,6 +1,9 @@
 ---
 name: performance-optimization
 description: Optimizes application performance. Use when performance requirements exist, when you suspect performance regressions, or when Core Web Vitals or load times need improvement. Use when profiling reveals bottlenecks that need fixing.
+workflow_mode: strict
+max_context_files: 8
+default_output: evidence-heavy
 ---
 
 # Performance Optimization

@@ -8,6 +8,9 @@ description: Breaks a spec into ordered, vertically-sliced tasks with explicit
   work, or you can't describe acceptance in 3 bullets). Skip for single-file
   changes with obvious scope, when the spec already contains a well-formed
   task list, or for typo/comment-cleanup work where planning is overhead.
+workflow_mode: standard
+max_context_files: 5
+default_output: concise
 ---
 
 # Planning and Task Breakdown
@@ -36,9 +39,9 @@ Decompose work into small, verifiable tasks with explicit acceptance criteria. G
 
 This skill sits between two others; lean on them rather than re-deriving:
 
-- **Upstream:** `spec-driven-development` (`/ofa-spec`) produces the SPEC.md
-  that becomes this skill's input. If you don't have a spec, go back there
-  first — task breakdown without a spec is fiction.
+- **Upstream:** `spec-driven-development` (`/ofa-spec`) produces a spec under
+  `specs/` that becomes this skill's input. If you don't have a spec, go back
+  there first — task breakdown without a spec is fiction.
 - **Downstream:** `incremental-implementation` (`/ofa-build`) consumes the
   task list one slice at a time. The task shape below is tuned to its
   per-slice cycle (one logical change, runnable verification, commit). If
@@ -57,6 +60,19 @@ Before writing any code, operate in read-only mode:
 - Note risks and unknowns
 
 **Do NOT write code during planning.** The output is a plan document, not implementation.
+
+### Concise Plans for Small Scope
+
+When the spec is narrow and low-risk, use `lite` guidance from
+[`references/token-efficiency.md`](../../references/token-efficiency.md) to
+avoid over-loading context. Read the spec, existing task files if present, and
+only directly relevant source files found by targeted search. Keep the plan to
+the smallest structure that still preserves dependency order, acceptance
+criteria, verification, and checkpoints.
+
+Use the full template below for ambiguous, risky, multi-system, or parallelized
+work. For small changes, a short overview plus ordered tasks and verification is
+enough.
 
 ### Step 2: Identify the Dependency Graph
 
@@ -237,6 +253,7 @@ When multiple agents or sessions are available:
 - All tasks are XL-sized
 - No checkpoints between tasks
 - Dependency order isn't considered
+- Loading broad references before the plan shows they are needed
 
 ## Verification
 

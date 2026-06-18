@@ -9,7 +9,7 @@ Improve one-for-all so agents spend fewer tokens while still following disciplin
 - The source of truth is the current enhancement conversation, because no `SPEC.md` exists for this scope.
 - The first implementation should be conservative: prove the pattern on high-traffic entry points before changing every skill.
 - Token savings should come from smaller context loads and shorter outputs, not from removing verification or safety gates.
-- Existing validation commands remain the baseline: `node scripts/validate-skills.js --strict`, `node scripts/scan-duplication.js`, and `node scripts/check-lifecycle-chain.js`.
+- Existing validation commands remain the baseline: `node scripts/validate-skills.js --strict`, `node scripts/validate-commands.js`, `node scripts/scan-duplication.js`, and `node scripts/check-lifecycle-chain.js`.
 
 ## Dependency Graph
 
@@ -48,40 +48,40 @@ Token policy vocabulary
 
 ### Phase 1: Foundation
 
-- [ ] Task 1: Define token policy reference
-- [ ] Task 2: Add skill selection guide
-- [ ] Task 3: Extend skill anatomy schema
+- [x] Task 1: Define token policy reference
+- [x] Task 2: Add skill selection guide
+- [x] Task 3: Extend skill anatomy schema
 
 ### Checkpoint: Foundation
 
-- [ ] Human confirms the policy vocabulary is clear enough for contributors.
-- [ ] New docs explain when to use `lite`, `standard`, and `strict`.
-- [ ] No skill behavior has changed yet except documentation and routing guidance.
+- [x] Human confirms the policy vocabulary is clear enough for contributors.
+- [x] New docs explain when to use `lite`, `standard`, and `strict`.
+- [x] No skill behavior has changed yet except documentation and routing guidance.
 
 ### Phase 2: Core Behavior
 
-- [ ] Task 4: Update meta-skill routing
-- [ ] Task 5: Pilot token-aware skill edits
-- [ ] Task 6: Add semantic validation
-- [ ] Task 7: Update slash command defaults
+- [x] Task 4: Update meta-skill routing
+- [x] Task 5: Pilot token-aware skill edits
+- [x] Task 6: Add semantic validation
+- [x] Task 7: Update slash command defaults
 
 ### Checkpoint: Core Behavior
 
-- [ ] Validator passes with pilot skills.
-- [ ] Token-saving behavior is visible in the highest-traffic entry points.
-- [ ] Commands still preserve verification gates.
+- [x] Validator passes with pilot skills.
+- [x] Token-saving behavior is visible in the highest-traffic entry points.
+- [x] Commands still preserve verification gates.
 
 ### Phase 3: Rollout
 
-- [ ] Task 8: Roll out metadata pack-wide
-- [ ] Task 9: Extract reusable repeated guidance
-- [ ] Task 10: Final validation and dogfood review
+- [x] Task 8: Roll out metadata pack-wide
+- [x] Task 9: Extract reusable repeated guidance
+- [x] Task 10: Final validation and dogfood review
 
 ### Checkpoint: Complete
 
-- [ ] All validation scripts pass.
-- [ ] Documentation points contributors to the new token-efficient workflow.
-- [ ] A reviewer can follow `tasks/todo.md` without needing the original chat context.
+- [x] All validation scripts pass.
+- [x] Documentation points contributors to the new token-efficient workflow.
+- [x] A reviewer can follow `tasks/todo.md` without needing the original chat context.
 
 ## Risks and Mitigations
 

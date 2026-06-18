@@ -11,6 +11,9 @@ description: Designs stable, hard-to-misuse APIs and module interfaces —
   refactors that don't alter the public surface, and changes confined to
   a single module's private functions — interface-design discipline is for
   *contracts*, not for every function call.
+workflow_mode: strict
+max_context_files: 8
+default_output: evidence-heavy
 ---
 
 # API and Interface Design

@@ -22,6 +22,15 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 Skills also activate automatically based on what you're doing — designing an API triggers `api-and-interface-design`, building UI triggers `frontend-ui-engineering`, and so on. See [docs/skill-selection.md](docs/skill-selection.md) for choosing the smallest sufficient skill path and `lite` / `standard` / `strict` mode.
 
+**Validation:**
+
+```bash
+node scripts/validate-skills.js --strict
+node scripts/validate-commands.js
+node scripts/scan-duplication.js
+node scripts/check-lifecycle-chain.js
+```
+
 ---
 
 ## Quick Start (Claude Code)
@@ -233,10 +242,9 @@ See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the format specification 
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest: **v1.2.0** —
-mobile engineering track: `mobile-ui-engineering` (Build) and
-`mobile-simulator-testing` (Verify) covering React Native/Expo, Flutter,
-native iOS, native Android, and Kotlin Multiplatform; `references/mobile-checklist.md`.
+See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest: **v1.3.0** —
+token-efficient skill routing, command validation, pack-wide token metadata,
+and spec artifacts stored under ignored `specs/` folders.
 
 ## License
 

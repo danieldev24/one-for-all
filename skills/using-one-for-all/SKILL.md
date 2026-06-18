@@ -11,7 +11,7 @@ one-for-all is a collection of engineering workflow skills organized by developm
 
 ## Skill Discovery
 
-When a task arrives, identify the development phase and apply the corresponding skill:
+When a task arrives, identify the development phase and apply the corresponding skill. Use [`docs/skill-selection.md`](../../docs/skill-selection.md) to choose the smallest sufficient skill path, and use [`references/token-efficiency.md`](../../references/token-efficiency.md) for the `lite`, `standard`, and `strict` context budgets.
 
 ```
 Task arrives
@@ -37,6 +37,23 @@ Task arrives
     ├── Writing docs/ADRs? ───────────→ documentation-and-adrs
     └── Deploying/launching? ─────────→ shipping-and-launch
 ```
+
+## Minimal Context Routing
+
+Route by the smallest workflow that can safely produce evidence:
+
+1. Choose the current phase and one primary skill.
+2. Choose the workflow mode: `lite`, `standard`, or `strict`.
+3. Add companion skills only when their trigger is present.
+4. Read the primary skill first; load supporting references only when the mode,
+   risk, ambiguity, failed verification, or user request requires them.
+5. Escalate mode before broadening context to unrelated skills or references.
+
+Mode definitions and escalation rules live in
+[`references/token-efficiency.md`](../../references/token-efficiency.md).
+Scenario mapping and companion skill triggers live in
+[`docs/skill-selection.md`](../../docs/skill-selection.md). Keep this skill as
+the router; do not duplicate those tables here.
 
 ## Core Operating Behaviors
 
@@ -121,6 +138,9 @@ These are the subtle errors that look like productivity but create problems:
 8. Removing things you don't fully understand
 9. Building without a spec because "it's obvious"
 10. Skipping verification because "it looks right"
+11. Loading multiple phase skills before choosing one primary skill
+12. Reading broad references before searching for the specific question
+13. Adding companion skills without a matching trigger
 
 ## Skill Rules
 
@@ -128,9 +148,11 @@ These are the subtle errors that look like productivity but create problems:
 
 2. **Skills are workflows, not suggestions.** Follow the steps in order. Don't skip verification steps.
 
-3. **Multiple skills can apply.** A feature implementation might involve `idea-refine` → `spec-driven-development` → `planning-and-task-breakdown` → `incremental-implementation` → `test-driven-development` → `code-review-and-quality` → `shipping-and-launch` in sequence.
+3. **Multiple skills can apply, but start with one primary skill.** A feature implementation might involve `idea-refine` → `spec-driven-development` → `planning-and-task-breakdown` → `incremental-implementation` → `test-driven-development` → `code-review-and-quality` → `shipping-and-launch` in sequence. Load each skill when that phase becomes current, not all at once.
 
 4. **When in doubt, start with a spec.** If the task is non-trivial and there's no spec, begin with `spec-driven-development`.
+
+5. **Search before expanding context.** Use targeted search to find the smallest relevant file range before opening broad docs, unrelated skills, or large references.
 
 ## Lifecycle Sequence
 
@@ -190,6 +212,8 @@ situation:
 | Starting a new feature from scratch | `/ofa-spec` (`spec-driven-development`) |
 | Spec exists, ready to break into tasks | `/ofa-plan` (`planning-and-task-breakdown`) |
 | Plan exists, ready to build | `/ofa-build` (`incremental-implementation`) |
+| Web UI work is the primary task | `frontend-ui-engineering` |
+| Stakes are high or the code is unfamiliar | `doubt-driven-development` |
 | Code is ready for review | `/ofa-review` (`code-review-and-quality`) |
 | Code is reviewed, ready to ship | `/ofa-ship` (`shipping-and-launch`) |
 

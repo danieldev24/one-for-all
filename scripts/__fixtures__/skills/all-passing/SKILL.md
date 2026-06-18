@@ -1,6 +1,9 @@
 ---
 name: all-passing
 description: Fixture skill that passes every v1.1 validator check. Use when you want to confirm the validator emits a clean PASS for a well-formed skill, including the trigger keyword, populated rationalization table, three verification items, and a Next handoff table.
+workflow_mode: standard
+max_context_files: 4
+default_output: concise
 ---
 
 # All Passing Fixture
@@ -33,6 +36,8 @@ A minimal fixture exercising every required v1.1 section so the validator can co
 - [ ] Validator exits 0 against this fixture
 - [ ] No warnings emitted for this fixture
 - [ ] All six required sections present
+- [ ] Confirm best practice language with `node scripts/validate-skills.js --strict`
+- [ ] Make robust checks measurable with `node scripts/test-validator.js`
 
 ## Next
 

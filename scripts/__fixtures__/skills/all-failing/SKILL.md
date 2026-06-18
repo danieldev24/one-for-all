@@ -22,4 +22,4 @@ A minimal fixture that fails every v1.1 validator check.
 
 ## Verification
 - [ ] Validator emits a failure for description length
-- [ ] Validator emits a failure for missing Next section
+- [ ] Ensure quality as needed and make robust improvements

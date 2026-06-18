@@ -33,12 +33,13 @@ description: Guides agents through [task/workflow]. Use when [specific trigger c
 
 **Why this matters:** Agents discover skills by reading descriptions. The description is injected into the system prompt, so it must tell the agent both what the skill provides and when to activate it. Do not summarize the workflow — if the description contains process steps, the agent may follow the summary instead of reading the full skill.
 
-### Token Metadata (Optional)
+### Token Metadata (Required for Standard Skills)
 
 Token metadata documents the intended context budget for a skill. These fields
-are optional until the validator enforces them, but reviewers should require
-them for new skills and for existing skills touched as part of token-efficiency
-work.
+are required for non-exempt skills and enforced by
+`node scripts/validate-skills.js --strict`. Meta or legacy skills listed in the
+validator exemption table may omit them until they are brought into the
+standard structure.
 
 ```yaml
 ---
@@ -60,9 +61,10 @@ default_output: concise
   `evidence-heavy`.
 
 **When to include it:**
-- New skills should include token metadata from the start.
-- Skills changed to reduce token usage should add metadata in the same change.
-- Existing untouched skills may wait for the pack-wide rollout task.
+- New non-exempt skills must include token metadata from the start.
+- Existing non-exempt skills must keep metadata valid when edited.
+- Exempt skills may omit metadata only while they remain listed in
+  `SECTION_EXEMPT_SKILLS`.
 
 This metadata does not replace the required `name` and `description` fields.
 It helps agents choose the right context budget after the skill has already
@@ -175,7 +177,7 @@ Verification items must be **testable**, not aspirational. A future reader shoul
 **Good:**
 ```markdown
 - [ ] `node scripts/validate-skills.js --strict` exits 0
-- [ ] SPEC.md exists at repo root with all six sections
+- [ ] `specs/<feature-slug>.md` exists with all required sections
 - [ ] Each item in Success Criteria has a measurable threshold
 ```
 
@@ -295,6 +297,8 @@ Required:
 - A `skills/<skill-name>/SKILL.md` file
 - Valid YAML frontmatter with `name` and `description`
 - A description that includes both what the skill does and when to use it
+- Token metadata fields for non-exempt skills: `workflow_mode`,
+  `max_context_files`, and `default_output`
 - All six standard sections: `## Overview`, `## When to Use`, `## Common Rationalizations`, `## Red Flags`, `## Verification`, `## Next`
 - Passes `node scripts/validate-skills.js --strict` (see "v1.1 Quality Bar" above)
 

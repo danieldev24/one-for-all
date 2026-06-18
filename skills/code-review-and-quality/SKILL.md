@@ -10,6 +10,9 @@ description: Reviews a change across five axes (correctness, readability,
   formatter-only runs (`prettier --write`, `eslint --fix` with no behavior
   change), and lockfile-only updates from automated dependency bots —
   spend the review budget where the risk is.
+workflow_mode: standard
+max_context_files: 6
+default_output: evidence-heavy
 ---
 
 # Code Review and Quality
@@ -300,9 +303,9 @@ inspection, or PR-comment audit:
 - [ ] Every required (no-prefix) comment has an author response — either
       a code change in a follow-up commit referencing the line, or an
       explicit reply explaining the deferral
-- [ ] Test command from SPEC.md `## Commands` returns exit 0 on the head
+- [ ] Test command from the spec file's `## Commands` returns exit 0 on the head
       commit (`git log -1 --format=%H` to confirm what was tested)
-- [ ] Build command from SPEC.md `## Commands` returns exit 0
+- [ ] Build command from the spec file's `## Commands` returns exit 0
 - [ ] At least one severity-labeled comment exists per ~200 lines of diff
       *or* the PR is genuinely trivial — pure-unlabeled "LGTM" reviews on
       a non-trivial diff are a red flag

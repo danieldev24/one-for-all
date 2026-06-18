@@ -1,6 +1,9 @@
 ---
 name: shipping-and-launch
 description: Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.
+workflow_mode: strict
+max_context_files: 8
+default_output: evidence-heavy
 ---
 
 # Shipping and Launch

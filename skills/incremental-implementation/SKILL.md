@@ -8,6 +8,9 @@ description: Delivers changes in thin vertical slices — implement one piece,
   `planning-and-task-breakdown`. Skip for single-file, single-function changes
   where the scope is already minimal, or when `test-driven-development` is the
   better fit (bug-driven work where a regression test must land first).
+workflow_mode: standard
+max_context_files: 5
+default_output: concise
 ---
 
 # Incremental Implementation
@@ -44,6 +47,20 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
   refactor loop. Use TDD for any non-trivial behavioral change in a slice.
 - **Downstream:** `code-review-and-quality` (`/ofa-review`) once the slice
   is done; `debugging-and-error-recovery` if a slice breaks.
+
+## Context Intake
+
+Before editing a slice, read only the context needed to make the next safe
+change. Use [`references/token-efficiency.md`](../../references/token-efficiency.md)
+for escalation rules.
+
+1. Read the current task block and its acceptance criteria.
+2. Open files listed in "Files likely touched" first.
+3. Use `rg` for symbols, commands, or error text before opening more files.
+4. Stop around `max_context_files` unless verification fails, risk increases, or
+   the implementation path is genuinely unclear.
+5. Escalate mode before reading broad docs, unrelated skills, or full
+   directories.
 
 ## The Increment Cycle
 
@@ -261,6 +278,7 @@ After each increment, verify:
 - Touching files outside the task scope "while I'm here"
 - Creating new utility files for one-time operations
 - Running the same build/test command twice in a row without any intervening code change
+- Reading broad context before targeted search identifies the relevant files
 
 ## Verification
 
@@ -275,12 +293,12 @@ command, file check, or numeric output:
 - [ ] `git status` shows a clean working tree (no uncommitted changes left
       over from the last slice)
 - [ ] The full test suite passes (`npm test` or the project's command from
-      SPEC.md `## Commands` returns exit 0)
+      the spec file's `## Commands` returns exit 0)
 - [ ] The build is clean (`npm run build` returns exit 0; for TypeScript
       projects also `npx tsc --noEmit`)
 - [ ] An end-to-end check covering the user-visible behavior of the feature
       passes — either an automated e2e test or a recorded manual walk-through
-      against the SPEC.md success criteria
+      against the spec file's success criteria
 - [ ] No commit message in the slice range contains generic strings like
       "wip", "fix stuff", or "more changes" (`git log --format=%s` to scan)
 

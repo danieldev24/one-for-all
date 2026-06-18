@@ -106,7 +106,7 @@ For each skill: the canonical forward edge plus 1–2 branch edges that are most
 
 #### `using-one-for-all`
 - **Forward:** depends on the situation — this is a router, not a step. Each row in its `## Next` maps a phase to the appropriate entry skill.
-- Branches: `spec-driven-development`, `planning-and-task-breakdown`, `incremental-implementation`, `code-review-and-quality`, `shipping-and-launch`.
+- Branches: `spec-driven-development`, `planning-and-task-breakdown`, `incremental-implementation`, `frontend-ui-engineering`, `doubt-driven-development`, `code-review-and-quality`, `shipping-and-launch`.
 
 ### Define
 
