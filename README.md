@@ -20,7 +20,7 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 | Simplify the code | `/ofa-code-simplify` | Clarity over cleverness |
 | Ship to production | `/ofa-ship` | Faster is safer |
 
-Skills also activate automatically based on what you're doing — designing an API triggers `api-and-interface-design`, building UI triggers `frontend-ui-engineering`, and so on.
+Skills also activate automatically based on what you're doing — designing an API triggers `api-and-interface-design`, building UI triggers `frontend-ui-engineering`, and so on. See [docs/skill-selection.md](docs/skill-selection.md) for choosing the smallest sufficient skill path and `lite` / `standard` / `strict` mode.
 
 ---
 

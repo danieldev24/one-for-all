@@ -33,6 +33,41 @@ description: Guides agents through [task/workflow]. Use when [specific trigger c
 
 **Why this matters:** Agents discover skills by reading descriptions. The description is injected into the system prompt, so it must tell the agent both what the skill provides and when to activate it. Do not summarize the workflow — if the description contains process steps, the agent may follow the summary instead of reading the full skill.
 
+### Token Metadata (Optional)
+
+Token metadata documents the intended context budget for a skill. These fields
+are optional until the validator enforces them, but reviewers should require
+them for new skills and for existing skills touched as part of token-efficiency
+work.
+
+```yaml
+---
+name: skill-name-with-hyphens
+description: Guides agents through [task/workflow]. Use when [specific trigger conditions].
+workflow_mode: standard
+max_context_files: 5
+default_output: concise
+---
+```
+
+**Fields:**
+- `workflow_mode`: Default mode from
+  [`references/token-efficiency.md`](../references/token-efficiency.md):
+  `lite`, `standard`, or `strict`.
+- `max_context_files`: Soft cap for files to read before escalating mode or
+  asking for direction. Use a small integer, not "unlimited".
+- `default_output`: Expected response shape, usually `concise`, `standard`, or
+  `evidence-heavy`.
+
+**When to include it:**
+- New skills should include token metadata from the start.
+- Skills changed to reduce token usage should add metadata in the same change.
+- Existing untouched skills may wait for the pack-wide rollout task.
+
+This metadata does not replace the required `name` and `description` fields.
+It helps agents choose the right context budget after the skill has already
+been selected.
+
 ### Standard Sections (Recommended Pattern)
 
 The frontmatter contract above is required. The section layout below is a recommended pattern, not a rigid template: equivalent headings are acceptable when they serve the same purpose clearly.
@@ -215,6 +250,14 @@ Create supporting files only when:
 - Checklists are long enough to justify separate files
 
 Keep patterns and principles inline when under 50 lines.
+
+**Token-conscious examples:**
+- Put shared mode definitions in `references/token-efficiency.md`; link to them
+  from skills instead of repeating the same table.
+- Keep a skill-specific decision tree in `SKILL.md` when it is under 50 lines
+  and directly changes agent behavior.
+- Move long reusable checklists to `references/`, then include only the exact
+  "read this when..." trigger in the skill.
 
 If a skill does not need runnable helpers, do not create an empty `scripts/` directory just to mirror other skills. Empty directories add noise without changing how the skill works.
 
