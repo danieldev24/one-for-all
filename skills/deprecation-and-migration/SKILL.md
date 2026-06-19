@@ -12,6 +12,10 @@ default_output: evidence-heavy
 
 Code is a liability, not an asset. Every line of code has ongoing maintenance cost — bugs to fix, dependencies to update, security patches to apply, and new engineers to onboard. Deprecation is the discipline of removing code that no longer earns its keep, and migration is the process of moving users safely from the old to the new.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to remove owned surface area only after usage, migration, rollback, and safety
+evidence show the simpler system is complete.
+
 Most engineering organizations are good at building things. Few are good at removing them. This skill addresses that gap.
 
 ## When to Use

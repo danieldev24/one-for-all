@@ -26,6 +26,7 @@ const COMMANDS = {
   'ofa-build.md': 'one-for-all:incremental-implementation',
   'ofa-test.md': 'one-for-all:test-driven-development',
   'ofa-review.md': 'one-for-all:code-review-and-quality',
+  'ofa-code-simplify.md': 'one-for-all:code-simplification',
 };
 
 const REQUIRED_TERMS = [

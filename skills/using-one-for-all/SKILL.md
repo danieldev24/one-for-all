@@ -11,7 +11,13 @@ one-for-all is a collection of engineering workflow skills organized by developm
 
 ## Skill Discovery
 
-When a task arrives, identify the development phase and apply the corresponding skill. Use [`docs/skill-selection.md`](../../docs/skill-selection.md) to choose the smallest sufficient skill path, and use [`references/token-efficiency.md`](../../references/token-efficiency.md) for the `lite`, `standard`, and `strict` context budgets.
+When a task arrives, identify the development phase and apply the corresponding
+skill. Use [`docs/skill-selection.md`](../../docs/skill-selection.md) to choose
+the smallest sufficient skill path,
+[`references/token-efficiency.md`](../../references/token-efficiency.md) for the
+`lite`, `standard`, and `strict` context budgets, and
+[`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md) before
+expanding scope or adding companion skills.
 
 ```
 Task arrives
@@ -43,14 +49,18 @@ Task arrives
 Route by the smallest workflow that can safely produce evidence:
 
 1. Choose the current phase and one primary skill.
-2. Choose the workflow mode: `lite`, `standard`, or `strict`.
-3. Add companion skills only when their trigger is present.
-4. Read the primary skill first; load supporting references only when the mode,
+2. Apply the Lean Senior SDLC gate: skip speculative work, prefer existing
+   capability, and keep non-negotiable safety checks.
+3. Choose the workflow mode: `lite`, `standard`, or `strict`.
+4. Add companion skills only when their trigger is present.
+5. Read the primary skill first; load supporting references only when the mode,
    risk, ambiguity, failed verification, or user request requires them.
-5. Escalate mode before broadening context to unrelated skills or references.
+6. Escalate mode before broadening context to unrelated skills or references.
 
 Mode definitions and escalation rules live in
 [`references/token-efficiency.md`](../../references/token-efficiency.md).
+The Lean Senior SDLC gate lives in
+[`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md).
 Scenario mapping and companion skill triggers live in
 [`docs/skill-selection.md`](../../docs/skill-selection.md). Keep this skill as
 the router; do not duplicate those tables here.
@@ -107,6 +117,11 @@ Before finishing any implementation, ask:
 
 If you build 1000 lines and 100 would suffice, you have failed. Prefer the boring, obvious solution. Cleverness is expensive.
 
+Use the Lean Senior SDLC gate for scope choices: existing code, stdlib, native
+platform behavior, and installed dependencies come before new abstractions or
+new packages. Simplicity is not permission to remove validation, security,
+accessibility, data-safety handling, or explicit requirements.
+
 ### 5. Maintain Scope Discipline
 
 Touch only what you're asked to touch.
@@ -141,6 +156,7 @@ These are the subtle errors that look like productivity but create problems:
 11. Loading multiple phase skills before choosing one primary skill
 12. Reading broad references before searching for the specific question
 13. Adding companion skills without a matching trigger
+14. Running a full SDLC path when the lean gate shows a smaller safe path
 
 ## Skill Rules
 
@@ -153,6 +169,10 @@ These are the subtle errors that look like productivity but create problems:
 4. **When in doubt, start with a spec.** If the task is non-trivial and there's no spec, begin with `spec-driven-development`.
 
 5. **Search before expanding context.** Use targeted search to find the smallest relevant file range before opening broad docs, unrelated skills, or large references.
+
+6. **Apply Lean Senior SDLC before creating work.** If existing capability or a
+smaller verified slice covers the task, take that path and keep verification
+evidence.
 
 ## Lifecycle Sequence
 

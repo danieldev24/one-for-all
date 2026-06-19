@@ -70,6 +70,9 @@ together, not as alternatives:
 ### Step 1: RED — Write a Failing Test
 
 Write the test first. It must fail. A test that passes immediately proves nothing.
+For non-trivial behavior, choose the smallest meaningful test that would fail if
+the behavior is wrong. Lean testing means fewer low-value checks, not skipping
+the check that guards the behavior.
 
 ```typescript
 // RED: This test fails because createTask doesn't exist yet
@@ -88,6 +91,10 @@ describe('TaskService', () => {
 ### Step 2: GREEN — Make It Pass
 
 Write the minimum code to make the test pass. Don't over-engineer:
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+when choosing the implementation path: existing code, stdlib, native behavior,
+and installed dependencies come before custom code. Do not remove validation,
+security, accessibility, or data-safety handling to make the code shorter.
 
 ```typescript
 // GREEN: Minimal implementation
@@ -379,6 +386,8 @@ For detailed testing patterns, examples, and anti-patterns across frameworks, se
 - Tests that pass on the first run (they may not be testing what you think)
 - "All tests pass" but no tests were actually run
 - Bug fixes without reproduction tests
+- Calling a behavior "too small to test" when it has branches, parsing, trust
+  boundaries, money/security impact, or data-loss risk
 - Tests that test framework behavior instead of application behavior
 - Test names that don't describe the expected behavior
 - Skipping tests to make the suite pass

@@ -21,6 +21,11 @@ default_output: evidence-heavy
 
 Security-first development practices for web applications. Treat every external input as hostile, every secret as sacred, and every authorization check as mandatory. Security isn't a phase — it's a constraint on every line of code that touches user data, authentication, or external systems.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to reduce unnecessary security surface area, not required controls. A shorter
+implementation that weakens validation, authorization, secret handling, or audit
+evidence is incomplete.
+
 ## When to Use
 
 - Building anything that accepts user input

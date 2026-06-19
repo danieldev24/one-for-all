@@ -64,6 +64,10 @@ The full per-axis diagnostic questions and copy-paste checklist live in
 they can be loaded only when actually doing a review and reused by other
 review-style skills without duplication.
 
+Apply [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+inside the readability and architecture axes: flag new owned surface area that
+does not buy current correctness, clarity, safety, or verified user value.
+
 **The approval standard:** approve a change when it definitely improves
 overall code health, even if it isn't perfect. Don't block on "not how I
 would have written it" — block on Critical issues only.
@@ -138,6 +142,16 @@ For each file changed:
 3. Architecture: Does this fit the system?
 4. Security: Any vulnerabilities?
 5. Performance: Any bottlenecks?
+```
+
+Also produce a delete/defer list when applicable:
+
+```
+LEAN REVIEW:
+- Delete: [dead wrapper, duplicated config, unused branch]
+- Inline: [one-use abstraction that obscures the call site]
+- Defer: [future-facing feature not required by this task]
+- Keep: [validation/security/accessibility/test evidence that must not be cut]
 ```
 
 ### Step 4: Categorize Findings
@@ -292,6 +306,8 @@ memory.
 - No regression tests with bug fix PRs
 - Review comments without severity labels — makes it unclear what's required vs optional
 - Accepting "I'll fix it later" — it never happens
+- New dependencies, factories, adapters, or config surfaces without current
+  evidence they are needed
 
 ## Verification
 
@@ -313,6 +329,9 @@ inspection, or PR-comment audit:
       readability, architecture, security, performance — each as either a
       checkbox in the review note or an explicit "no findings on this
       axis" line
+- [ ] Any over-engineering findings include a delete, inline, defer, or keep
+      recommendation; "less code" is not accepted if it weakens correctness,
+      security, accessibility, or data-safety evidence
 
 ## Next
 

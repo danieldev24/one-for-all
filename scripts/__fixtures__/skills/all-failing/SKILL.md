@@ -7,6 +7,7 @@ description: too short
 
 ## Overview
 A minimal fixture that fails every v1.1 validator check.
+1. Build a robust framework for future workflow needs
 
 ## When to Use
 - Validator regression test for failure paths

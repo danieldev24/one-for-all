@@ -14,6 +14,10 @@ default_output: concise
 
 Simplify code by reducing complexity while preserving exact behavior. The goal is not fewer lines — it's code that is easier to read, understand, modify, and debug. Every simplification must pass a simple test: "Would a new team member understand this faster than the original?"
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+as the shared lens for deleting, inlining, or deferring unnecessary owned
+surface area. Lean simplification still preserves behavior exactly.
+
 ## When to Use
 
 - After a feature is working and tests pass, but the implementation feels heavier than it needs to be
@@ -100,6 +104,8 @@ Simplification has a failure mode: over-simplification. Watch for these traps:
 - **Combining unrelated logic** — two simple functions merged into one complex function is not simpler
 - **Removing "unnecessary" abstraction** — some abstractions exist for extensibility or testability, not complexity
 - **Optimizing for line count** — fewer lines is not the goal; easier comprehension is
+- **Cutting safety evidence** — removing validation, security checks,
+  accessibility behavior, or tests is not simplification
 
 ### 5. Scope to What Changed
 
@@ -315,6 +321,8 @@ function UserBadge({ user }: Props) {
 - "Simplified" code that is longer and harder to follow than the original
 - Renaming things to match your preferences rather than project conventions
 - Removing error handling because "it makes the code cleaner"
+- Removing validation, security, accessibility, or data-loss handling because
+  it makes the diff shorter
 - Simplifying code you don't fully understand
 - Batching many simplifications into one large, hard-to-review commit
 - Refactoring code outside the scope of the current task without being asked

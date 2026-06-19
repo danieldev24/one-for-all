@@ -4,6 +4,57 @@ All notable changes to **one-for-all** are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## \[Unreleased\]
+
+## \[1.4.0\] — 2026-06-19
+
+Lean Senior SDLC enhancement. Adds a cross-cutting "smallest correct thing"
+discipline across one-for-all: reduce scope, context, dependencies, and owned
+surface area while preserving verification, security, accessibility, data
+safety, and explicit user requirements.
+
+### Added
+
+- `references/lean-senior-sdlc.md` — shared minimality gate, phase questions,
+  safety boundaries, intentional `lean:` comment guidance, and review signals.
+- `docs/lean-senior-benchmark.md` — benchmark design with `baseline`,
+  `ofa-current`, `ofa-lean`, and `ofa-strict` arms plus metrics for skill path,
+  context files, LOC, verification, safety, completeness, cost, time, and turns.
+- `docs/dogfood-lean-senior-sdlc.md` — seven dogfood scenarios covering tiny
+  docs, bug fix, security refusal, UI verification, review/simplification,
+  planning, and accessibility safety refusal.
+- Lean validator checks in `scripts/validate-skills.js`:
+  `lean-reference-missing` for pilot skills and `semantic-lean-expansion` for
+  unsupported framework-sized action lines.
+
+### Changed
+
+- All 25 skills now link to Lean Senior SDLC where it affects behavior, without
+  copying the full gate into each skill.
+- `/ofa-plan`, `/ofa-build`, `/ofa-test`, `/ofa-review`, and
+  `/ofa-code-simplify` include concise lean defaults while preserving existing
+  verification language.
+- `README.md`, `docs/skill-anatomy.md`, and `docs/lifecycle-map.md` now expose
+  Lean Senior SDLC as a cross-cutting policy, not a new lifecycle phase.
+
+### Verification gates
+
+- `node scripts/test-validator.js` — all tests passed.
+- `node scripts/validate-skills.js --strict` — 25 skills checked, 0 errors,
+  0 warnings.
+- `node scripts/validate-commands.js` — all 5 command entry points passed.
+- `node scripts/scan-duplication.js` — 0 duplicate blocks over threshold.
+- `node scripts/check-lifecycle-chain.js` — 25 skills checked, 0 errors,
+  0 warnings.
+
+### Limitations
+
+- The benchmark is a design document and dogfood checklist, not a completed
+  quantitative run. Do not claim token, cost, or LOC savings until raw run
+  artifacts exist.
+- Lean wins only after completeness, verification, and safety gates pass; fewer
+  lines alone are not a success metric.
+
 ## \[1.3.0\] — 2026-06-18
 
 Token-efficiency and artifact-hygiene release. Adds a shared token policy, pack-wide token metadata, command validation, and safer local spec storage for projects using OFA. No breaking changes to skill names or slash command names.

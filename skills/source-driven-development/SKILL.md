@@ -12,6 +12,10 @@ default_output: evidence-heavy
 
 Every framework-specific code decision must be backed by official documentation. Don't implement from memory — verify, cite, and let the user see your sources. Training data goes stale, APIs get deprecated, best practices evolve. This skill ensures the user gets code they can trust because every pattern traces back to an authoritative source they can check.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to fetch only the authoritative page needed for the current decision and to
+prefer documented built-ins before custom wrappers or new dependencies.
+
 ## When to Use
 
 - The user wants code that follows current best practices for a given framework

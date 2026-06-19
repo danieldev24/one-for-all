@@ -6,6 +6,8 @@ Invoke the one-for-all:incremental-implementation skill alongside one-for-all:te
 
 Token discipline: default to concise `standard` output. Use `lite` only for small, low-risk slices with obvious acceptance criteria and obvious verification. Escalate to `strict` when risk, ambiguity, failing verification, or the user explicitly asks for deeper analysis.
 
+Lean discipline: use existing code, stdlib, native behavior, or installed dependencies before adding new abstractions, files, or packages.
+
 Pick the next pending task from the plan. For each task:
 
 1. Read the task's acceptance criteria

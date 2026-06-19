@@ -70,6 +70,10 @@ only directly relevant source files found by targeted search. Keep the plan to
 the smallest structure that still preserves dependency order, acceptance
 criteria, verification, and checkpoints.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to choose the smallest verified slice before adding phases, companion work, or
+"later" infrastructure to the plan.
+
 Use the full template below for ambiguous, risky, multi-system, or parallelized
 work. For small changes, a short overview plus ordered tasks and verification is
 enough.
@@ -117,6 +121,11 @@ Task 4: User can view task list (query + API + UI for list view)
 ```
 
 Each vertical slice delivers working, testable functionality.
+
+Prefer the smallest vertical slice that proves the user value and can be
+verified independently. If a proposed task needs speculative platform work,
+optional polish, and multiple unrelated subsystems, split it or defer the parts
+that are not needed for the current acceptance criteria.
 
 ### Step 4: Write Tasks
 
@@ -254,6 +263,8 @@ When multiple agents or sessions are available:
 - No checkpoints between tasks
 - Dependency order isn't considered
 - Loading broad references before the plan shows they are needed
+- Tasks include speculative infrastructure that the current acceptance criteria
+  do not require
 
 ## Verification
 

@@ -12,6 +12,11 @@ default_output: evidence-heavy
 
 Build production-quality mobile UI across the five mainstream stacks. Mobile is its own discipline — app lifecycle, OS permissions, offline behavior, platform navigation idioms, and store policies have no real analogue on the web. The goal is UI that respects each platform's Human Interface Guidelines (iOS HIG) and Material Design 3 (Android), reuses shared logic where it pays, and treats unreliable networks and aggressive process termination as the default — not edge cases.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to choose platform-native behavior before wrappers and to keep permission,
+lifecycle, offline, and accessibility handling inside the minimum viable mobile
+slice.
+
 This skill covers the architecture decisions; runtime verification on simulators/emulators belongs to `mobile-simulator-testing`.
 
 ## When to Use

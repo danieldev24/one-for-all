@@ -152,6 +152,10 @@ console.log('\nTest 2: all-failing fixture');
   assertResult('flags semantic-vague-phrase', failing,
     r => r.check === 'semantic-vague-phrase' && r.severity === 'warn');
 
+  // Check I: lean expansion phrase without concrete evidence
+  assertResult('flags semantic-lean-expansion', failing,
+    r => r.check === 'semantic-lean-expansion' && r.severity === 'warn');
+
   // Check H: non-exempt skills require token metadata
   assertResult('flags missing token metadata', failing,
     r => r.check === 'token-metadata-missing' && r.severity === 'warn');
@@ -290,6 +294,61 @@ console.log('\nTest 5: token metadata validation');
   assertResult('flags invalid token metadata values', invalidResults,
     r => r.check === 'token-metadata-invalid' && r.severity === 'warn',
     { expectCount: 3 });
+
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+}
+
+// ─── Test 6: lean pilot skills must link the shared reference ────────────────
+
+console.log('\nTest 6: Lean Senior SDLC reference hook');
+{
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ofa-validator-'));
+  const leanDir = path.join(tmpDir, 'incremental-implementation');
+  fs.mkdirSync(leanDir);
+  const fixture = [
+    '---',
+    'name: incremental-implementation',
+    'description: Fixture skill that intentionally omits the lean reference. Use when validating Lean Senior SDLC reference checks.',
+    'workflow_mode: standard',
+    'max_context_files: 5',
+    'default_output: concise',
+    '---',
+    '',
+    '# Incremental Implementation',
+    '',
+    '## Overview',
+    'A minimal fixture for lean reference validation.',
+    '',
+    '## When to Use',
+    '- Validator regression test',
+    '',
+    '## Common Rationalizations',
+    '| R | Reality |',
+    '|---|---|',
+    '| a | b |',
+    '| c | d |',
+    '| e | f |',
+    '',
+    '## Red Flags',
+    '- one',
+    '',
+    '## Verification',
+    '- [ ] one',
+    '- [ ] two',
+    '- [ ] three',
+    '',
+    '## Next',
+    '| Situation | Suggest |',
+    '|---|---|',
+    '| a | `b` |',
+    '| c | `d` |',
+  ].join('\n');
+  fs.writeFileSync(path.join(leanDir, 'SKILL.md'), fixture + '\n');
+
+  const { results } = runValidator({ skillsDir: tmpDir });
+  const leanResults = results.filter(r => r.skill === 'incremental-implementation');
+  assertResult('flags missing lean reference on pilot skill', leanResults,
+    r => r.check === 'lean-reference-missing' && r.severity === 'warn');
 
   fs.rmSync(tmpDir, { recursive: true, force: true });
 }

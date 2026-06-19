@@ -12,6 +12,10 @@ default_output: evidence-heavy
 
 Systematic debugging with structured triage. When something breaks, stop adding features, preserve evidence, and follow a structured process to find and fix the root cause. Guessing wastes time. The triage checklist works for test failures, build errors, runtime bugs, and production incidents.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+when reducing a failure: isolate the smallest reproducible case, fix only the
+root cause, and keep the regression guard that proves it will not return.
+
 ## When to Use
 
 - Tests fail after a code change

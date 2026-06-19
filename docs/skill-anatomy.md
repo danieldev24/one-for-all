@@ -217,6 +217,19 @@ The dedup scanner (`scripts/scan-duplication.js`) flags any block of ≥ 5 verba
 
 Rule: each skill keeps at least one full worked example so it stands alone — references hold reusable patterns and checklists, not the entire skill content.
 
+### Lean Senior SDLC guidance
+
+Use [`references/lean-senior-sdlc.md`](../references/lean-senior-sdlc.md)
+when a skill needs the shared "smallest correct thing" discipline: existing
+capability before new code, deletion before abstraction, and safety boundaries
+that cannot be cut. Keep the reusable lean gate in the reference; put only
+skill-specific examples or one-line reminders in `SKILL.md` files.
+
+Lean guidance complements token metadata. Token-efficient work loads less
+context, but it still produces verification evidence. Do not shorten a skill by
+removing required checks for validation, security, accessibility, data safety,
+or explicit user requirements.
+
 ### Lifecycle handoff (`## Next` section)
 
 Every skill ends with a `## Next` section telling the agent what to recommend when this skill exits. Format is consistent across all skills:
@@ -256,6 +269,8 @@ Keep patterns and principles inline when under 50 lines.
 **Token-conscious examples:**
 - Put shared mode definitions in `references/token-efficiency.md`; link to them
   from skills instead of repeating the same table.
+- Put shared Lean Senior SDLC rules in `references/lean-senior-sdlc.md`; link
+  to them instead of copying the minimality gate into multiple skills.
 - Keep a skill-specific decision tree in `SKILL.md` when it is under 50 lines
   and directly changes agent behavior.
 - Move long reusable checklists to `references/`, then include only the exact
@@ -271,6 +286,9 @@ If a skill does not need runnable helpers, do not create an empty `scripts/` dir
 4. **Anti-rationalization.** Every skip-worthy step needs a counter-argument in the rationalizations table.
 5. **Progressive disclosure.** Main SKILL.md is the entry point. Supporting files are loaded only when needed.
 6. **Token-conscious.** Every section must justify its inclusion. If removing it wouldn't change agent behavior, remove it.
+7. **Lean but verified.** Prefer the smallest correct workflow, but never cut
+   the evidence that proves correctness, safety, accessibility, or data
+   handling.
 
 ## Naming Conventions
 

@@ -22,6 +22,13 @@ Skills encode the workflows, quality gates, and best practices that senior engin
 
 Skills also activate automatically based on what you're doing — designing an API triggers `api-and-interface-design`, building UI triggers `frontend-ui-engineering`, and so on. See [docs/skill-selection.md](docs/skill-selection.md) for choosing the smallest sufficient skill path and `lite` / `standard` / `strict` mode.
 
+**Lean Senior SDLC:** one-for-all now applies a cross-cutting "smallest correct
+thing" gate inspired by the idea of a senior dev who is lazy in the useful way:
+reuse existing capability, avoid speculative abstractions, and never cut
+verification or safety. Start with [references/lean-senior-sdlc.md](references/lean-senior-sdlc.md);
+measurement design lives in [docs/lean-senior-benchmark.md](docs/lean-senior-benchmark.md)
+and dogfood scenarios live in [docs/dogfood-lean-senior-sdlc.md](docs/dogfood-lean-senior-sdlc.md).
+
 **Validation:**
 
 ```bash
@@ -149,6 +156,8 @@ Quick-reference material that skills pull in when needed:
 | [performance-checklist.md](references/performance-checklist.md) | Core Web Vitals targets, frontend/backend checklists, measurement commands |
 | [accessibility-checklist.md](references/accessibility-checklist.md) | Keyboard nav, screen readers, visual design, ARIA, testing tools |
 | [mobile-checklist.md](references/mobile-checklist.md) | Permissions, app lifecycle, offline behavior, mobile a11y (VoiceOver/TalkBack, Dynamic Type), build/release identifiers, per-platform pitfalls |
+| [token-efficiency.md](references/token-efficiency.md) | `lite` / `standard` / `strict` context budgets, escalation rules, and mandatory verification |
+| [lean-senior-sdlc.md](references/lean-senior-sdlc.md) | Smallest correct slice, existing capability before new code, and safety boundaries |
 
 ---
 
@@ -214,7 +223,7 @@ one-for-all/
 │   ├── shipping-and-launch/           #   Ship
 │   └── using-one-for-all/             #   Meta: how to use this pack
 ├── agents/                            # 3 specialist personas
-├── references/                        # 4 supplementary checklists
+├── references/                        # Supplementary checklists and shared workflow policy
 ├── hooks/                             # Session lifecycle hooks
 ├── .claude/commands/                  # 7 slash commands (Claude Code)
 └── docs/                              # Setup guides
@@ -242,9 +251,9 @@ See [docs/skill-anatomy.md](docs/skill-anatomy.md) for the format specification 
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest: **v1.3.0** —
-token-efficient skill routing, command validation, pack-wide token metadata,
-and spec artifacts stored under ignored `specs/` folders.
+See [CHANGELOG.md](CHANGELOG.md) for release notes. Latest release:
+**v1.4.0** — Lean Senior SDLC hooks across all skills, validator coverage for
+lean expansion patterns, and benchmark/dogfood measurement docs.
 
 ## License
 

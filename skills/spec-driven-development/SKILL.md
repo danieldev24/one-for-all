@@ -20,6 +20,11 @@ default_output: concise
 
 Write a structured specification before writing any code. The spec is the shared source of truth between you and the human engineer — it defines what we're building, why, and how we'll know it's done. Code without a spec is guessing.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to keep the spec focused on the smallest correct, verified outcome. Put
+explicit non-goals in the boundaries section instead of smuggling future work
+into requirements.
+
 ## When to Use
 
 - Starting a new project or feature

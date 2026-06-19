@@ -4,6 +4,10 @@ description: Simplify code for clarity and maintainability — reduce complexity
 
 Invoke the one-for-all:code-simplification skill.
 
+Token discipline: default to concise `standard` output. Use `lite` only for tiny, low-risk simplifications with obvious verification. Escalate to `strict` when risk, ambiguity, failing verification, or the user explicitly asks for deeper analysis.
+
+Lean discipline: reduce owned surface area without changing behavior or cutting validation, security, accessibility, or data-safety checks.
+
 Simplify recently changed code (or the specified scope) while preserving exact behavior:
 
 1. Read CLAUDE.md and study project conventions

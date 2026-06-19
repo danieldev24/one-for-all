@@ -12,6 +12,10 @@ default_output: evidence-heavy
 
 Measure before optimizing. Performance work without measurement is guessing — and guessing leads to premature optimization that adds complexity without improving what matters. Profile first, identify the actual bottleneck, fix it, measure again. Optimize only what measurements prove matters.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to reject speculative optimization infrastructure. The lean path is the smallest
+measured fix that improves the named metric and keeps a regression guard.
+
 ## When to Use
 
 - Performance requirements exist in the spec (load time budgets, response time SLAs)

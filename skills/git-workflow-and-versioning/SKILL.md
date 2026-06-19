@@ -12,6 +12,10 @@ default_output: concise
 
 Git is your safety net. Treat commits as save points, branches as sandboxes, and history as documentation. With AI agents generating code at high speed, disciplined version control is the mechanism that keeps changes manageable, reviewable, and reversible.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to keep each commit to the smallest reversible unit that still carries its own
+verification evidence.
+
 ## When to Use
 
 Always. Every code change flows through git.

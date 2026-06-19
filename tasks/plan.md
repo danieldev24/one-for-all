@@ -1,107 +1,151 @@
-# Implementation Plan: Token-Efficient one-for-all Enhancement
+# Implementation Plan: Lean Senior SDLC Enhancement
 
 ## Overview
 
-Improve one-for-all so agents spend fewer tokens while still following disciplined workflows. The enhancement adds explicit workflow modes, a skill-selection router, progressive-disclosure rules, token-aware metadata, semantic linting for vague guidance, and a phased rollout path across the skill pack.
+Enhance one-for-all with a project-native version of the Ponytail philosophy:
+"senior dev lười nhưng đúng" — build the smallest correct, verified, secure,
+accessible, and shippable thing. This should become a cross-cutting SDLC
+discipline, not a copied Ponytail skill. The outcome is a leaner workflow that
+reduces token use, code bloat, dependency sprawl, and over-planning while
+preserving one-for-all's production-grade verification gates.
 
 ## Assumptions
 
-- The source of truth is the current enhancement conversation, because no `SPEC.md` exists for this scope.
-- The first implementation should be conservative: prove the pattern on high-traffic entry points before changing every skill.
-- Token savings should come from smaller context loads and shorter outputs, not from removing verification or safety gates.
-- Existing validation commands remain the baseline: `node scripts/validate-skills.js --strict`, `node scripts/validate-commands.js`, `node scripts/scan-duplication.js`, and `node scripts/check-lifecycle-chain.js`.
+- No approved `specs/` document exists for this enhancement; this plan is based
+  on the current discussion and the existing token-efficiency work.
+- `one-for-all` already has the SDLC spine; the enhancement should tune routing,
+  skill behavior, review criteria, and measurement rather than replace them.
+- Shared principles belong in `references/`; individual skills should link to
+  them to avoid duplication.
+- Benchmarking must measure workflow quality, context discipline, and safety, not
+  just fewer lines of code.
+- The rollout should be incremental: reference first, pilot skills second,
+  validators third, benchmark harness last.
 
 ## Dependency Graph
 
 ```text
-Token policy vocabulary
+Lean SDLC reference
     |
-    +-- Skill selection guide
+    +-- Skill anatomy guidance
     |       |
-    |       +-- using-one-for-all routing update
-    |       +-- README quickstart update
+    |       +-- Lifecycle map wording
+    |       +-- Router updates
     |
-    +-- Skill anatomy metadata schema
+    +-- Pilot skill updates
+    |       |
+    |       +-- Build/test/review/simplify behavior
+    |       +-- Slash command wording
+    |
+    +-- Validator rules
+    |       |
+    |       +-- Fixture tests
+    |
+    +-- Benchmark design
             |
-            +-- Validator semantic checks
-            |       |
-            |       +-- Validator fixture tests
-            |
-            +-- Pilot skill updates
-                    |
-                    +-- Slash command updates
-                    |
-                    +-- Full skill rollout
-                            |
-                            +-- Dedup and lifecycle validation
+            +-- Dogfood tasks
+            +-- Reproducible harness
+            +-- Results writeup
 ```
 
 ## Architecture Decisions
 
-- Use `lite`, `standard`, and `strict` as workflow modes so small tasks avoid full process overhead while risky tasks keep strong gates.
-- Put reusable token policy in `references/` and keep `SKILL.md` files focused on what agents must do immediately.
-- Treat `using-one-for-all` as the router entry point because it already controls skill discovery.
-- Add semantic linting to the existing validator first, rather than introducing a separate script, so contributors keep one primary quality gate.
-- Roll out metadata and concise-process changes in two passes: pilot on core skills, then apply pack-wide after validation proves stable.
+- Treat Ponytail as an inspiration source, not a dependency. Reuse the ladder,
+  safety boundaries, mode concept, and benchmark shape in one-for-all language.
+- Name the project-native pattern **Lean Senior SDLC** so it does not inherit
+  Ponytail's branding or persona.
+- Add one canonical reference such as `references/lean-senior-sdlc.md` with the
+  minimality gate and non-negotiable safety boundaries.
+- Keep `references/token-efficiency.md` focused on context budgets; cross-link it
+  instead of merging everything into one long policy.
+- Update high-traffic skills first: `using-one-for-all`,
+  `planning-and-task-breakdown`, `incremental-implementation`,
+  `test-driven-development`, `code-review-and-quality`, and
+  `code-simplification`.
+- Extend validation only after the prose pattern is stable, so the lint rules
+  enforce real behavior rather than early wording guesses.
+- Build a benchmark inspired by Ponytail's agentic harness, but score one-for-all
+  on skill-path minimality, context loaded, verification preserved, safety, LOC,
+  files changed, cost, time, and turns.
 
 ## Task List
 
 ### Phase 1: Foundation
 
-- [x] Task 1: Define token policy reference
-- [x] Task 2: Add skill selection guide
-- [x] Task 3: Extend skill anatomy schema
+- [x] Task 1: Write Lean Senior SDLC reference
+- [x] Task 2: Update contributor anatomy
+- [x] Task 3: Map lifecycle gates
 
 ### Checkpoint: Foundation
 
-- [x] Human confirms the policy vocabulary is clear enough for contributors.
-- [x] New docs explain when to use `lite`, `standard`, and `strict`.
-- [x] No skill behavior has changed yet except documentation and routing guidance.
+- [x] The lean principle has one source of truth under `references/`.
+- [x] Existing token-efficiency docs remain short and focused.
+- [x] No production skill has duplicated the full reference text.
 
-### Phase 2: Core Behavior
+### Phase 2: Workflow Behavior
 
-- [x] Task 4: Update meta-skill routing
-- [x] Task 5: Pilot token-aware skill edits
-- [x] Task 6: Add semantic validation
-- [x] Task 7: Update slash command defaults
+- [x] Task 4: Update router behavior
+- [x] Task 5: Pilot build path
+- [x] Task 6: Pilot review path
+- [x] Task 7: Tune command entries
 
-### Checkpoint: Core Behavior
+### Checkpoint: Pilot
 
-- [x] Validator passes with pilot skills.
-- [x] Token-saving behavior is visible in the highest-traffic entry points.
-- [x] Commands still preserve verification gates.
+- [x] Pilot skills pass strict validation.
+- [x] Dedup scan reports no copied Lean SDLC blocks.
+- [x] Slash commands still preserve explicit verification language.
 
-### Phase 3: Rollout
+### Phase 3: Enforcement
 
-- [x] Task 8: Roll out metadata pack-wide
-- [x] Task 9: Extract reusable repeated guidance
-- [x] Task 10: Final validation and dogfood review
+- [x] Task 8: Add lean validation checks
+- [x] Task 9: Add benchmark specification
+- [x] Task 10: Create dogfood scenarios
+
+### Checkpoint: Measurement
+
+- [x] Validator catches obvious over-engineering language without noisy failures.
+- [x] Benchmark spec can be reviewed before harness code exists.
+- [x] Dogfood scenarios cover tiny, normal, strict, UI, and review workflows.
+
+### Phase 4: Rollout
+
+- [x] Task 11: Roll out pack-wide references
+- [x] Task 12: Run full verification
+- [x] Task 13: Publish results note
 
 ### Checkpoint: Complete
 
-- [x] All validation scripts pass.
-- [x] Documentation points contributors to the new token-efficient workflow.
-- [x] A reviewer can follow `tasks/todo.md` without needing the original chat context.
+- [x] All validators pass.
+- [x] The workflow has a measurable before/after story.
+- [x] A new contributor can understand the Lean Senior SDLC from README, the
+      reference, and one pilot skill without reading this chat.
 
 ## Risks and Mitigations
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| `lite` mode weakens quality gates | High | Define non-negotiable verification for every mode; only reduce context and output size. |
-| Metadata churn touches too many files | Medium | Pilot first; roll out in a separate phase after schema is stable. |
-| Semantic lint creates noisy failures | Medium | Start with warnings or scoped strict checks; add fixture tests before enforcing broadly. |
-| Skill text becomes too terse to guide agents | Medium | Keep one worked example per skill and move only reusable details to references. |
-| Routing guide duplicates README content | Low | README links to the guide; the guide holds decision logic. |
+| Lean guidance becomes another ceremony layer | High | Keep the gate to 4-6 questions and wire it into existing skills instead of adding a new phase. |
+| Agents cut verification to save tokens | High | State the safety boundary in the reference and enforce it in review/test skills. |
+| Content duplicates across skills | Medium | Put reusable wording in `references/lean-senior-sdlc.md`; skills link to it with local examples only. |
+| Benchmark rewards doing less work | High | Include completeness, verification, and safety gates alongside LOC/token metrics. |
+| Validator rules become noisy | Medium | Start with warnings and fixture tests; promote only stable checks to strict errors. |
+| Ponytail branding leaks into one-for-all | Low | Use one-for-all naming and cite Ponytail only in benchmark/design notes if needed. |
 
 ## Open Questions
 
-- Should `lite` be the default for all slash commands, or only for small/obvious tasks?
-- Should token metadata be required in strict validation immediately, or introduced as warnings first?
-- Should the first rollout touch all skills, or only the command-backed lifecycle skills first?
+- Should the public name be `Lean Senior SDLC`, `Lazy-Correct SDLC`, or another
+  one-for-all-native phrase?
+- Should `lite/full/ultra/off` be reused as visible modes, or should
+  one-for-all keep `lite/standard/strict` and treat lean as a gate inside each?
+- Should the first benchmark use local simulated dogfood only, or a real
+  headless Codex/Claude harness from the start?
+- Should lean validation look for banned patterns, required checklist mentions,
+  or both?
 
 ## Suggested Implementation Order
 
-1. Complete Phase 1 so the vocabulary and contributor contract are explicit.
-2. Complete Tasks 4-7 as a pilot on the router, two core skills, commands, and validator.
-3. Pause for review before pack-wide rollout.
-4. Complete Tasks 8-10 after the pilot proves the rules are not noisy.
+1. Land Tasks 1-3 first so the principle has a stable home.
+2. Pilot Tasks 4-7 on the high-traffic path before touching the full pack.
+3. Add validator and benchmark design after the pilot wording is proven.
+4. Roll out references pack-wide only after dedup and strict validation stay
+   clean.

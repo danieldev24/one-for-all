@@ -12,6 +12,11 @@ default_output: evidence-heavy
 
 Use Chrome DevTools MCP to give your agent eyes into the browser. This bridges the gap between static code analysis and live browser execution — the agent can see what the user sees, inspect the DOM, read console logs, analyze network requests, and capture performance data. Instead of guessing what's happening at runtime, verify it.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to pick the smallest browser check that would catch the bug or regression:
+screenshot, console, DOM, network, accessibility tree, or trace only when that
+signal is needed.
+
 ## When to Use
 
 - Building or modifying anything that renders in a browser

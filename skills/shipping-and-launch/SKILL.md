@@ -12,6 +12,11 @@ default_output: evidence-heavy
 
 Ship with confidence. The goal is not just to deploy — it's to deploy safely, with monitoring in place, a rollback plan ready, and a clear understanding of what success looks like. Every launch should be reversible, observable, and incremental.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to choose the simplest staged release that proves production safety. Lean launch
+work keeps rollback, monitoring, security, accessibility, and data recovery
+evidence.
+
 ## When to Use
 
 - Deploying a feature to production for the first time

@@ -12,6 +12,10 @@ default_output: evidence-heavy
 
 Verify mobile UI on real simulators and emulators before declaring it done. Editor previews (SwiftUI Preview, Compose Preview, Flutter Hot Reload, Expo Fast Refresh) hide the bugs that matter — lifecycle transitions, real font scaling, permission system prompts, deep-link cold launches, and low-end-device frame rates. The simulator is the cheapest place to catch these, and far cheaper than a one-star App Store review.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to target the cheapest simulator path that proves the risky behavior, while
+keeping permission, lifecycle, accessibility, and data-loss checks intact.
+
 This skill covers runtime verification. UI architecture decisions belong to `mobile-ui-engineering`.
 
 ## When to Use

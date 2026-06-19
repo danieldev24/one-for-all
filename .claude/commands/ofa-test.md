@@ -6,6 +6,8 @@ Invoke the one-for-all:test-driven-development skill.
 
 Token discipline: default to concise `standard` output. Use `lite` only for narrow test-only changes with obvious acceptance criteria and obvious verification. Escalate to `strict` when risk, ambiguity, failing verification, or the user explicitly asks for deeper analysis.
 
+Lean discipline: write the smallest meaningful check that would fail if the behavior is wrong; do not cut safety coverage.
+
 For new features:
 1. Write tests that describe the expected behavior (they should FAIL)
 2. Implement the code to make them pass

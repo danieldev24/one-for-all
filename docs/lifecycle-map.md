@@ -80,6 +80,24 @@ Cross-cutting skills (loaded as needed at any phase):
    api-and-interface-design     (when designing contracts)
 ```
 
+## Lean Senior SDLC Gate
+
+Lean Senior SDLC is a cross-cutting discipline, not a new phase or skill edge.
+Use [`references/lean-senior-sdlc.md`](../references/lean-senior-sdlc.md) to
+keep each phase focused on the smallest correct, verified path:
+
+| Phase | Lean question |
+|---|---|
+| Define | What is the smallest user problem worth solving now? |
+| Plan | What is the smallest vertical slice with clear acceptance criteria? |
+| Build | What can existing code, stdlib, native behavior, or installed packages cover? |
+| Verify | What is the minimal check that would fail if this is wrong? |
+| Review | What can be deleted, inlined, or deferred without losing correctness? |
+| Ship | What is the simplest release path with clear rollback evidence? |
+
+These gates do not change the canonical spine below. They constrain how much
+scope each existing phase is allowed to create.
+
 Mobile pair (Build → Verify) mirrors the web pair:
 
 ```

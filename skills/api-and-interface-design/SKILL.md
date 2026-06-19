@@ -22,6 +22,11 @@ default_output: evidence-heavy
 
 Design stable, well-documented interfaces that are hard to misuse. Good interfaces make the right thing easy and the wrong thing hard. This applies to REST APIs, GraphQL schemas, module boundaries, component props, and any surface where one piece of code talks to another.
 
+Apply [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+when sizing a public surface: expose only the fields, methods, versions, and
+extension points the current consumers can justify, while keeping validation and
+evolution paths explicit.
+
 ## When to Use
 
 - Designing new API endpoints (REST, GraphQL, RPC)

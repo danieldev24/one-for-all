@@ -16,6 +16,11 @@ Automate quality gates so that no change reaches production without passing test
 
 **Faster is Safer:** Smaller batches and more frequent releases reduce risk, not increase it. A deployment with 3 changes is easier to debug than one with 30. Frequent releases build confidence in the release process itself.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to automate the smallest quality gate that catches the real risk. Do not remove
+checks for security, data safety, accessibility, or build correctness to make CI
+look faster.
+
 ## When to Use
 
 - Setting up a new project's CI pipeline

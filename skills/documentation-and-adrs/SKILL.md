@@ -12,6 +12,10 @@ default_output: concise
 
 Document decisions, not just code. The most valuable documentation captures the *why* — the context, constraints, and trade-offs that led to a decision. Code shows *what* was built; documentation explains *why it was built this way* and *what alternatives were considered*. This context is essential for future humans and agents working in the codebase.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to document only decisions that future maintainers need to reverse, audit, or
+extend. Lightweight notes beat ceremonial ADRs for obvious local changes.
+
 ## When to Use
 
 - Making a significant architectural decision

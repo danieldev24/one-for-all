@@ -6,6 +6,8 @@ Invoke the one-for-all:code-review-and-quality skill.
 
 Token discipline: default to concise `standard` output. Use `lite` only for tiny, low-risk diffs with obvious verification. Escalate to `strict` when risk, ambiguity, failing verification, or the user explicitly asks for deeper analysis.
 
+Lean discipline: flag code to delete, inline, or defer, while keeping validation, security, accessibility, and data-safety evidence.
+
 Review the current changes (staged or recent commits) across all five axes:
 
 1. **Correctness** — Does it match the spec? Edge cases handled? Tests adequate?

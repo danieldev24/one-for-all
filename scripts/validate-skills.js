@@ -26,6 +26,8 @@
  *   - SKILL.md is <=500 lines
  *   - checklist/numbered workflow lines avoid vague phrases without evidence
  *   - non-exempt skills declare token metadata
+ *   - lean-enabled pilot skills reference the Lean Senior SDLC source
+ *   - checklist/numbered workflow lines avoid speculative expansion phrases
  *
  * Checks (warnings, never block):
  *   - cross-skill references point to known skills
@@ -63,6 +65,17 @@ const VAGUE_PHRASES = [
   'polish',
 ];
 
+const LEAN_EXPANSION_PHRASES = [
+  'build a robust framework',
+  'robust framework',
+  'future-proof framework',
+  'future proof framework',
+  'generic framework',
+  'configurable framework',
+  'extensible architecture',
+  'abstraction layer',
+];
+
 const CONCRETE_EVIDENCE_PATTERN = /`[^`]+`|https?:\/\/|\b(?:exit|returns?)\s+0\b|\b\d+(?:\.\d+)?\s*(?:%|ms|s|sec|secs|seconds?|m|min|mins|minutes?|h|hr|hrs|hours?|files?|lines?|items?|rows?|chars?|checks?)\b/i;
 
 const VALID_WORKFLOW_MODES = new Set(['lite', 'standard', 'strict']);
@@ -90,6 +103,15 @@ const SECTION_EXEMPT_SKILLS = {
   'using-one-for-all': 'Meta-skill — orchestrates other skills; When-to-Use and Verification are not applicable to a routing document.',
   'idea-refine':       'Legacy structure predating skill-anatomy.md — uses How-It-Works/Usage/Anti-patterns instead of standard headings. Tracked for conformance in https://github.com/danieldev24/one-for-all/issues',
 };
+
+const LEAN_REFERENCE_REQUIRED_SKILLS = new Set([
+  'using-one-for-all',
+  'planning-and-task-breakdown',
+  'incremental-implementation',
+  'test-driven-development',
+  'code-review-and-quality',
+  'code-simplification',
+]);
 
 // Regex patterns that indicate an explicit cross-skill reference.
 // Only these patterns trigger the dead-reference warning — generic
@@ -240,6 +262,41 @@ function findVagueActionLines(content) {
 
     const lower = line.toLowerCase();
     for (const phrase of VAGUE_PHRASES) {
+      if (lower.includes(phrase)) {
+        findings.push({ line: i + 1, phrase });
+        break;
+      }
+    }
+  }
+
+  return findings;
+}
+
+/**
+ * Find speculative expansion phrases in actionable lines. These are warning
+ * signals for Lean Senior SDLC because they often create framework-sized work
+ * before a current slice proves that surface area is needed.
+ */
+function findLeanExpansionLines(content) {
+  const findings = [];
+  let inCodeFence = false;
+  const lines = content.split(/\r?\n/);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    if (/^```/.test(trimmed)) {
+      inCodeFence = !inCodeFence;
+      continue;
+    }
+    if (inCodeFence) continue;
+
+    const isActionLine = /^\s*(?:-\s+\[[ xX]?\]|\d+\.)\s+/.test(line);
+    if (!isActionLine) continue;
+    if (CONCRETE_EVIDENCE_PATTERN.test(line)) continue;
+
+    const lower = line.toLowerCase();
+    for (const phrase of LEAN_EXPANSION_PHRASES) {
       if (lower.includes(phrase)) {
         findings.push({ line: i + 1, phrase });
         break;
@@ -405,6 +462,16 @@ function checkSkill(dirName, knownSkills) {
     results.push({ severity: 'warn', skill: dirName, check: 'line-count', message: `SKILL.md is ${lineCount} lines — over the ${MAX_SKILL_LINES}-line cap; extract content to references/` });
   }
 
+  // ── Lean Senior SDLC reference hook for pilot skills
+  if (LEAN_REFERENCE_REQUIRED_SKILLS.has(dirName) && !content.includes('references/lean-senior-sdlc.md')) {
+    results.push({
+      severity: 'warn',
+      skill: dirName,
+      check: 'lean-reference-missing',
+      message: 'Lean-enabled pilot skill must link to references/lean-senior-sdlc.md instead of duplicating the gate.',
+    });
+  }
+
   // ── Check G: vague semantic phrases in actionable lines
   for (const finding of findVagueActionLines(content)) {
     results.push({
@@ -412,6 +479,16 @@ function checkSkill(dirName, knownSkills) {
       skill: dirName,
       check: 'semantic-vague-phrase',
       message: `Vague phrase "${finding.phrase}" on line ${finding.line} lacks concrete evidence; name the command, threshold, file check, or observable result.`,
+    });
+  }
+
+  // ── Check I: speculative expansion phrases in actionable lines
+  for (const finding of findLeanExpansionLines(content)) {
+    results.push({
+      severity: 'warn',
+      skill: dirName,
+      check: 'semantic-lean-expansion',
+      message: `Lean expansion phrase "${finding.phrase}" on line ${finding.line} lacks evidence; name the current slice, trigger, threshold, or defer it.`,
     });
   }
 

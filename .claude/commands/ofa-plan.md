@@ -6,6 +6,8 @@ Invoke the one-for-all:planning-and-task-breakdown skill.
 
 Token discipline: default to concise `standard` output. Use `lite` only when the scope is small, low-risk, obvious to verify, and needs no deeper analysis. Escalate to `strict` when risk, ambiguity, failing verification, or the user explicitly asks for deeper analysis.
 
+Lean discipline: plan the smallest verified slice first; defer speculative infrastructure unless acceptance criteria require it.
+
 Read the existing spec from `specs/` (or an equivalent project-approved spec path) and the relevant codebase sections. Then:
 
 1. Enter plan mode — read only, no code changes

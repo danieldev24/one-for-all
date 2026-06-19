@@ -52,7 +52,9 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 
 Before editing a slice, read only the context needed to make the next safe
 change. Use [`references/token-efficiency.md`](../../references/token-efficiency.md)
-for escalation rules.
+for escalation rules and
+[`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md) before
+adding new abstractions, packages, or files.
 
 1. Read the current task block and its acceptance criteria.
 2. Open files listed in "Files likely touched" first.
@@ -79,7 +81,8 @@ for escalation rules.
 
 For each slice:
 
-1. **Implement** the smallest complete piece of functionality
+1. **Implement** the smallest complete piece of functionality, using existing
+   code, stdlib, native platform behavior, or installed dependencies first
 2. **Test** — run the test suite (or write a test if none exists)
 3. **Verify** — confirm the slice works as expected (tests pass, build succeeds, manual check)
 4. **Commit** -- save your progress with a descriptive message (see `git-workflow-and-versioning` for atomic commit guidance)
@@ -135,6 +138,9 @@ If Slice 1 fails, you discover it before investing in Slices 2 and 3.
 ### Rule 0: Simplicity First
 
 Before writing any code, ask: "What is the simplest thing that could work?"
+Use the Lean Senior SDLC gate when the answer is not obvious: skip speculative
+work, reuse existing capability, prefer platform features, and keep validation,
+security, accessibility, and data-safety checks.
 
 After writing code, review it against these checks:
 - Can this be done in fewer lines?
@@ -277,6 +283,8 @@ After each increment, verify:
 - Building abstractions before the third use case demands it
 - Touching files outside the task scope "while I'm here"
 - Creating new utility files for one-time operations
+- Adding a dependency before checking stdlib, platform features, or existing
+  project utilities
 - Running the same build/test command twice in a row without any intervening code change
 - Reading broad context before targeted search identifies the relevant files
 

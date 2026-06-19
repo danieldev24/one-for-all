@@ -22,6 +22,10 @@ default_output: concise
 
 Feed agents the right information at the right time. Context is the single biggest lever for agent output quality — too little and the agent hallucinates, too much and it loses focus. Context engineering is the practice of deliberately curating what the agent sees, when it sees it, and how it's structured.
 
+Use [`references/lean-senior-sdlc.md`](../../references/lean-senior-sdlc.md)
+to keep context artifacts small: add persistent rules only after repeated
+corrections, and prefer task-specific excerpts over broad context dumps.
+
 ## When to Use
 
 - Setting up a new project for AI-assisted development (no rules file
